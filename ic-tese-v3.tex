@@ -1,0 +1,320 @@
+% Escolha: Portugues ou Ingles ou Espanhol.
+% Para a versão final do texto, após a defesa, acrescente Final:
+
+\documentclass[Portugues]{ic-tese-v3}
+%\documentclass[Portugues,Final]{ic-tese-v3}
+
+\usepackage[latin1,utf8]{inputenc}
+\usepackage{glossaries}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{float}
+\usepackage{verbatim}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[portuguese,ruled,linesnumbered]{algorithm2e} 
+\usepackage{setspace}
+\usepackage{ragged2e}
+\usepackage{pdfpages}
+\usetikzlibrary{arrows, automata}
+\usetikzlibrary{graphs}
+\usepackage{xcolor}
+\newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\definecolor{lgr}{HTML}{C0C0C0}
+\definecolor{gr}{HTML}{9B9B9B}
+
+\newacronym{pma}{MS-MRP-QoS}{Maximum Service Multicast Routing Problem with Quality of Service Constraints}
+
+%Problema de Roteamento Multicast com Classificação de Terminais e Restrições de Qualidade de Serviço}
+% Terminais atendidos e não atendidos
+% Terminais não atendidos são descartados
+% Problema de Roteamento Multicast com Classificação de Terminais e Restrições de qualidade de Serviço
+\newacronym{sp}{SP}{Shortest Path}
+\newacronym{sprc}{SPRC}{Shortest Path with Resource Constraints}
+\newacronym{mrp}{MRP}{Multicast Routing Problem}
+\newacronym{mrp-qos}{MRP-QoS}{Multicast Routing Problem with Quality of Service constraints}
+\newacronym{pli}{PLI}{Programação Linear Inteira}
+\newacronym{plim}{PLIM}{Programação Linear Inteira Mista}
+\newacronym{smt}{MST}{Minimum Steiner Tree}
+\newacronym{qos}{QoS}{Quality of Service}
+\newacronym{rl}{RL}{Relaxação Lagrangiana}
+\newacronym{ppl}{PPL}{Problema Primal Lagrangiano}
+\newacronym{pdl}{PDL}{Problema Dual Lagrangiano}
+\newacronym{brkga}{BRKGA}{Biased Random-Key Genetic Algorithm}
+\newacronym{rkga}{RKGA}{Random-Key Genetic Algorithm}
+\newacronym{agm}{AGM}{Árvore Geradora Mínima}
+\newacronym{ls}{LS}{Limitante Superior}
+\newacronym{li}{LI}{Limitante Inferior}
+\newacronym{bl}{BL}{Busca Local}
+\newacronym{ag}{AG}{Algoritmo Genético}
+\newacronym{dmfm-pma}{DMFM-MRP}{}
+\newacronym{ab-pma}{AB-MRP}{}
+\newacronym{mve}{MVE}{Moderated Vertex Elimination}
+\newacronym{mae}{MAE}{Moderated Arc Elimination}
+\newacronym{sae}{SAE}{Strong Arc Elimination}
+
+\newcommand{\bfum}{BRKGA-F1}
+\newcommand{\bfdois}{BRKGA-F2}
+\newcommand{\bftres}{BRKGA-F3}
+\newcommand{\bftresrl}{BRKGA-F3-RL}
+
+\newcommand{\rlu}{RL-SP}
+\newcommand{\rld}{RL-SPRC$_{\lambda}$}
+\newcommand{\rlt}{RL-SPRC$_{\xi}$}
+\newcommand{\rlq}{RL-SPRC2}
+
+% Para acrescentar comentários ao PDF descomente:
+\usepackage
+%  [pdfauthor={nome do autor},
+%   pdftitle={titulo},
+%   pdfkeywords={palavra-chave, palavra-chave},
+%   pdfproducer={Latex with hyperref},
+%   pdfcreator={pdflatex}]
+{hyperref}
+
+\newcommand{\delay}{\textit{delay}}
+\newcommand{\jitter}{\textit{jitter}}
+
+\SetKwFor{Para}{para}{faça}{}
+\SetKwBlock{Inicio}{inicio}{}
+\SetKwInOut{AlgDados}{Dados}
+\SetKwInOut{AlgResultado}{Result.}
+\SetKwInput{Entrada}{Entrada}%
+\SetKwInput{Saida}{Sa\'{i}da}%
+\SetKwInput{Dados}{Dados}%
+\SetKwInput{Resultado}{resultado}%
+\SetKw{Ate}{at\'{e}}
+\SetKw{KwRetorna}{retorna}%
+\SetKw{Retorna}{retorna}%
+\SetKwIF{Se}{eSe}{Else}{se}{então}{se}{sen\~{a}o}{}
+%\SetKwIF{Se}{SenaoSe}{Sen\~{a}o}{Se}{Ent\~{a}o}{Sen\~{a}o se}{Sen\~{a}o}{Fim se}
+%\SetKwIF{Se}{eSe}{Else}{se}{então}{senão, se}{senão}{ si}
+\SetKwFor{ParaToda}{para toda}{faça}{}
+\SetKwFor{ParaTodo}{para todo}{faça}{}
+\SetKwBlock{inicio}{in\'{i}cio}{}%
+\SetKwRepeat{Repita}{repita}{at\'{e}}%
+\SetKwFor{Enquanto}{enquanto}{faça}{}{}
+
+\newtheoremstyle{exampstyle}
+  {.5pt} % Space above
+  {.5pt} % Space below
+  {\itshape} % Body font
+  {} % Indent amount
+  {\bfseries} % Theorem head font
+  {.} % Punctuation after theorem head
+  {.5em} % Space after theorem head
+  {} % Theorem head spec (can be left empty, meaning `normal')
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definição}[section]
+
+\theoremstyle{proposition}
+\newtheorem{proposition}{Proposição}[section]
+
+%\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+\begin{document}
+
+% Escolha entre autor ou autora:
+\autor{Carlos Victor Dantas Araújo}
+%\autora{Nome da Autora}
+
+% Sempre deve haver um título em português:
+\titulo{Formulações e Heurísticas para o Problema de Máximo Atendimento em Roteamento Multicast com Restrições de QoS}
+
+% Se a língua for o inglês ou o espanhol defina:
+%\title{The Dissertation or Thesis Title in English or Spanish}
+
+% Escolha entre orientador ou orientadora. Inclua os títulos acadêmicos:
+\orientador{Prof. Dr. Fábio Luiz Usberti}
+%\orientadora{Profa. Dra. Nome da Orientadora}
+
+% Escolha entre coorientador ou coorientadora, se houver.  Inclua os títulos acadêmicos:
+\coorientador{Prof. Dr. Cid Carvalho de Souza}
+%\coorientadora{Profa. Dra. Eng. Lic. Nome da Co-Orientadora}
+
+% Escolha entre mestrado ou doutorado:
+\mestrado
+%\doutorado
+
+% Se houve cotutela, defina:
+%\cotutela{Universidade Nova de Plutão}
+
+\datadadefesa{20}{05}{2021}
+
+% Para a versão final defina:
+%\avaliadorA{Prof. Dr. Primeiro Avaliador}{Instituição do primeiro avaliador}
+%\avaliadorB{Profa. Dra. Segunda Avaliadora}{Instituição da segunda avaliadora}
+%\avaliadorC{Dr. Terceiro Avaliador}{Instituição do terceiro avaliador}
+%\avaliadorD{Prof. Dr. Quarto Avaliador}{Instituição do quarto avaliador}
+%\avaliadorE{Prof. Dr. Quinto Avaliador}{Instituição do quinto avaliador}
+%\avaliadorF{Prof. Dr. Sexto Avaliador}{Instituição do sexto avaliador}
+%\avaliadorG{Prof. Dr. Sétimo Avaliador}{Instituição do sétimo avaliador}
+%\avaliadorH{Prof. Dr. Oitavo Avaliador}{Instituição do oitavo avaliador}
+
+
+% Para incluir a ficha catalográfica em PDF na versão final, descomente e ajuste:
+%\fichacatalografica{arquivo.pdf}
+
+
+% Este comando deve ficar aqui:
+\paginasiniciais
+
+
+% Se houver dedicatória, descomente:
+%\prefacesection{Dedicatória}
+%A dedicatória deve ocupar uma única página.
+
+
+% Se houver epígrafe, descomente e edite:
+% \begin{epigrafe}
+% {\it
+% Vita brevis,\\
+% ars longa,\\
+% occasio praeceps,\\
+% experimentum periculosum,\\
+% iudicium difficile.}
+%
+% \hfill (Hippocrates)
+% \end{epigrafe}
+
+
+% Agradecimentos ou Acknowledgements ou Agradecimientos
+%\prefacesection{Agradecimentos}
+%Os agradecimentos devem ocupar uma única página.
+
+
+% Sempre deve haver um resumo em português:
+\begin{resumo}
+
+Este trabalho  aborda o Problema  de Máximo Atendimento em  Roteamento Multicast
+com  restrições de  Qualidade  de Serviço  (com a  sigla  em inglês  MS-MRP-QoS)
+aplicado  no contexto  de redes  veiculares ad-hoc,  onde é  fornecida uma  rede
+veículos para qual deseja-se  enviar dados partindo de um nó  raiz com destino à
+um conjunto de nós  terminais. A utilização de todos os nós  não é obrigatória e
+cada conexão  entre o nó raiz  e um nó  terminal deve satisfazer a  qualidade de
+serviço conforme limites estabelecidos para cada métrica. O objetivo é maximizar
+o  número de  terminais atendidos  em  acordo com  as métricas  de qualidade  de
+serviço da rede.
+
+Nesta dissertação, foram desenvolvidas  formulações de programação inteira mista
+e quatro  relaxações lagrangianas, visando  obter limitantes primais e  duais de
+boa  qualidade. Também  foi  desenvolvido um  conjunto  de métodos  heurísticos,
+dentre eles  uma busca local  em arborescências, aplicada durante  as resoluções
+das  relaxações lagrangianas,  e três  meta-heurísticas BRKGA  com variações  no
+método de  decodificação, um deles incorporando  informações dos multiplicadores
+de  Lagrange.   As  metodologias  propostas  foram   submetidas  a  experimentos
+computacionais  com um  conjunto de  instâncias geradas  com características  de
+redes veiculares ad-hoc. Análises estatísticas foram realizadas para comparar os
+desempenhos  entre  as  metodologias.  Os  resultados  destacam  a  eficácia  da
+formulação mista  em obter  limitantes primais  e duais  de alta  qualidade para
+todas  as   instâncias  do  conjunto.   Já  a  formulação   inteira,  relaxações
+lagrangianas e  BRKGA obtiveram resultados  de boa qualidade  e estatisticamente
+semelhantes.
+
+  
+% Este trabalho  aborda o Problema de  Roteamento Multicast de Serviço  Máximo com
+% Restrições de Qualidade  de Serviço (com a sigla em  inglês MS-MRP-QoS) aplicado
+% no contexto de  redes veiculares ad hoc,  onde com base no  grafo que representa
+% uma  rede de  veículos, deseja-se  enviar mensagens  de um  determinado veículo,
+% chamado de nó  raiz, até um conjunto de nós  destino, denominados nós terminais,
+% podendo utilizar  demais nós  da rede  para que o  encaminhamento seja  feito. A
+% utilização de todos os  nós não é obrigatória e cada conexão  tem um conjunto de
+% parâmetros  de  qualidade  de  serviço.   Os  valores  correspondentes  a  estes
+% parâmetros vão  se acumulando ao  longo do caminho  selecionado para o  envio da
+% mensagem da raiz até um nó terminal  e as somas assim obtidas, se respeitarem os
+% limites  estabelecidos pela  qualidade  de serviço  almejada  na rede,  permitem
+% classificar  o terminal  em  questão como  atendido. O  objetivo  é maximizar  o
+% serviço provido, i.e.,  maximizar o número de terminais  marcados como atendidos
+% de acordo com as métricas de qualidade de serviço da rede.
+
+% Nesta dissertação,  após a definição do  problema, dado que, no  melhor do nosso
+% conhecimento,  o  mesmo  ainda  não  havia  sido  proposto  na  literatura,  foi
+% desenvolvida uma  formulação de programação  mista e uma de  programação inteira
+% que  foi  utilizada  com  base  para geração  de  quatro  diferentes  relaxações
+% lagrangianas, cujo objetivo é obter limitantes  primais e duais de boa qualidade
+% em tempo reduzido.  Foi desenvolvido também um conjunto  de métodos heurísticos,
+% dentre eles uma heurística de busca local em arborescências, que foi aplicada no
+% procedimento de resolução das relaxações lagrangianas, e a meta-heurística BRKGA
+% com três variações de cálculos para função  de aptidão e uma versão que altera a
+% estrutura padrão  do BRKGA para  incorporar informações advindas  dos resultados
+% das  relaxações lagrangianas.  A utilização  desse conjunto  de abordagens  para
+% resolução  do MS-MRP-QoS  permite validar  a qualidade  de limitantes  primais e
+% duais, de  modo que  as metodologias propostas  foram submetidas  a experimentos
+% computacionais  em  instâncias  que  buscam  se  assemelhar  ao  máximo  com  as
+% configurações  reais e  a validação  dos resultados  se deu  através de  análise
+% estatística. A análise ressaltou a qualidade principalmente da formulação mista,
+% que obteve limitantes primais e duais de alta qualidade para todas as instâncias
+% do  conjunto, seguido  da formulação  inteira, relaxações  lagrangianas e  BRKGA
+% obtiveram resultados de boa qualidade e estatisticamente semelhantes.
+ 
+\end{resumo}
+
+
+% Sempre deve haver um abstract:
+\begin{abstract}
+\end{abstract}
+
+
+% Se houver um resumo em espanhol, descomente:
+%\begin{resumen}
+% A mesma regra aplica-se.
+%\end{resumen}
+
+
+% A lista de figuras é opcional:
+\listoffigures
+
+% A lista de tabelas é opcional:
+\listoftables
+
+% A lista de abreviações e siglas é opcional:
+% \prefacesection{Lista de Abreviações e Siglas}
+
+% A lista de símbolos é opcional:
+% \prefacesection{Lista de Símbolos}
+
+% Quem usa o pacote nomencl pode incluir:
+%\renewcommand{\nomname}{Lista de Abreviações e Siglas}
+%\printnomenclature[3cm]
+
+
+% O sumário vem aqui:
+\tableofcontents
+
+% E esta linha deve ficar bem aqui:
+\fimdaspaginasiniciais
+
+% O corpo da dissertação ou tese começa aqui:
+\input{textual/introducao}
+\input{textual/preliminares}
+\input{textual/trabalhos-relacionados}
+\input{textual/metodologia}
+\input{textual/resultados}
+\input{textual/consideracoes-finais}
+
+% As referências:
+\bibliographystyle{plain}
+\bibliography{ic-tese-v3}
+
+
+% Os anexos, se houver, vêm depois das referências:
+%\appendix
+%\chapter{Anexo 1}
+%\chapter{Anexo 2}
+
+\end{document}

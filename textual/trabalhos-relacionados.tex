@@ -1,0 +1,243 @@
+\chapter{Revisão Bibliográfica} \label{chp:trab-relacionados}
+
+Neste  Capítulo, descrevemos  as abordagens  e resultados  obtidos por
+trabalhos disponíveis na literatura.  Nosso  foco são os trabalhos que
+realizaram estudos sobre  algoritmos para o problema  de roteamento em
+VANETs e novos protocolos otimizados.
+
+Segundo Peterson \cite{Peterson:2011}, um protocolo fornece um serviço
+de comunicação que objetos (nós da  rede) usam para troca de mensagens
+e informações.  No caso da  comunicação {\em multicast}, os protocolos
+são utilizados  para enviar  informações de uma  fonte para  um grande
+conjunto de  destinos utilizando  apenas uma  operação de  envio.  Uma
+parte  essencial   dos  protocolos  de  comunicação   é  o  roteamento
+\cite{OLIVEIRA20051953}. Do  ponto de vista matemático,  pode-se ver o
+roteamento como  um algoritmo  que manipula os  usuários e  enlaces da
+rede, de modo  que os pacotes enviados  por um dos nós  pode seguir um
+caminho para o destino utilizando  apenas enlaces selecionados e, caso
+existam restrições  de \gls{qos},  deve-se garantir  que todos  os nós
+destinos recebem as informações  respeitando os limites impostos pelas
+métricas  utilizadas na  rede. Assim,  desenvolver procedimentos  para
+construção  de   rotas  otimizadas,   significa  otimizar   também  os
+protocolos de comunicação.
+
+Para construção  de uma rota  é necessário  primeiramente que o  nó de
+origem (raiz) tenha conhecimento da topologia da rede como um todo.  O
+processo  de  reconhecimento dos  nós  pode  variar  de acordo  com  o
+protocolo, entretanto  o método  mais utilizado é  o de  inundação (do
+inglês  \textit{flooding}),  que  consiste  em  um  nó  realizando  um
+\textit{broadcast}  para todos  os nós  ao  seu alcance.   Os nós  que
+recebem  a mensagem,  por sua  vez, replicam  para os  demais da  rede
+utilizando a mesma abordagem. Ao final, o nó que inicialmente enviou a
+mensagem consegue ter conhecimento total da topologia da rede. Perceba
+que  esse processo  não garante  que um  veículo, após  o processo  de
+reconhecimento da rede, se mantenha conectado.
+
+\begin{comment}
+% Isso aqui vai para introdução
+O  problema de  construção de  rotas  {\em multicast}  é conhecido  na
+literatura como \gls{mrp}. Quando  leva-se em consideração as métricas
+de \gls{qos}, o problema resultante é conhecido como \gls{mrp-qos}. No
+geral, a diferença principal entre  as várias versões do \gls{mrp-qos}
+está na  combinação de  métricas de \gls{qos}  utilizadas e  os custos
+associados com a  função objetivo.  Existe uma  dificuldade na geração
+de instâncias para  o \gls{mrp-qos} associada com o fato  de que, para
+garantir a  existência de pelo menos  uma solução viável, o  valor das
+métricas  de  \gls{qos}  devem  ser  suficientes  para  que  todos  os
+terminais  sejam  atendidos,  mas  não é  vantajoso  utilizar  valores
+folgados  a pontos  de  não  haver dificuldade  para  o modelo.   Para
+validar a instâncias e identificar o  impacto do valor das métricas de
+\gls{qos}  é possível  utilizar  o \gls{pma}.   Uma  solução ótima  do
+\gls{pma} determina quais terminais podem  ser atendidos de acordo com
+as métricas  de \gls{qos}  informadas, fazendo  com que  seja possível
+adaptar a nova instâncias desconsiderando os terminais não atendidos e
+computando  o \gls{mrp-qos}  reduzindo  o conjunto  de terminais  para
+apenas os atendidos.
+
+Segundo Peterson \cite{Peterson:2011}, um protocolo fornece um serviço
+de comunicação que objetos (nós da  rede) usam para troca de mensagens
+e informações.   No caso da  comunicação multicast, os  protocolos são
+utilizados  para  enviar  informações  de uma  fonte  para  um  grande
+conjunto de  destinos utilizando  apenas uma  operação de  envio.  Uma
+parte  essencial   dos  protocolos  de  comunicação   é  o  roteamento
+\cite{OLIVEIRA20051953}. Do  ponto de vista matemático,  pode-se ver o
+roteamento como  um algoritmo  que manipula os  usuários e  enlaces da
+rede, de modo  que os pacotes enviados  por um dos nós  pode seguir um
+caminho para o destino utilizando  apenas enlaces selecionados e, caso
+existam restrições  de \gls{qos},  deve-se garantir  que todos  os nós
+destinos recebem as informações  respeitando os limites impostos pelas
+métricas  utilizadas na  rede. Assim,  desenvolver procedimentos  para
+construção  de   rotas  otimizadas,   significa  otimizar   também  os
+protocolos de comunicação.
+\end{comment}
+
+Oliveira e Pardalos \cite{OLIVEIRA20051953} afirmam que o \gls{mrp} se
+assemelha  com o  problema clássico  da Árvore  Mínima de  Steiner, do
+inglês \gls{smt}, o qual é $\mathcal{NP}$-difícil e possui uma extensa
+literatura,    por     exemplo    \cite{Garey:1990,    MACULAN1987185,
+  Winter:1987}.  A \gls{smt} pode  ser utilizada tanto para formulação
+quanto para representação  da solução em aplicações  do \gls{mrp}.  As
+versões mais estudadas  do \gls{smt}, associadas ao  \gls{mrp}, são as
+que  consideram  atraso  fim   a  fim  \cite{OLIVEIRA20051953}.   Vale
+ressaltar ainda que a combinação  de multiplas restrições de \gls{qos}
+tornam o problema ainda mais difícil de ser resolvido.
+
+Bitam e Mellouk \cite{BITAM2013981} desenvolveram um algoritmo baseado
+em enxame de abelhas para resolver  \gls{mrp-qos} em VANETs. Dado o nó
+origem e um conjunto de nós  destino, o objetivo é computar uma árvore
+que atenda todos  os terminais na qual a soma  dos custos das conexões
+seja mínimo e todas as métricas  de \gls{qos} sejam respeitadas.  As 4
+métricas  contidas   em  cada   conexão  são:  custo   de  utilização,
+\textit{delay}, \textit{jitter} e largura de banda. O peso atribuído a
+cada  métrica na  função  objetivo corresponde  à  sua importância  de
+atendimento  para qualidade  de  serviço.  O  algoritmo  de enxame  de
+abelhas foi comparado com outros  da literatura em um cenário simulado
+contendo  20 nós  (veículos)  em  uma área  de  1200 metros  quadrados
+durante um período de 120 segundos  e, por se tratar de uma simulação,
+os veículos  trafegam de forma  aleatória no trecho de  mapa fornecido
+para o  simulador.  A  criação das  instâncias foi  feita com  base na
+obtenção da topologia da rede no tempo de 85 segundos da simulação, ou
+seja, é computada uma fotografia que mostra o posicionamento dos nós e
+o valor  das métricas para todas  as conexões existentes na  rede.  Os
+resultados mostraram que  o algoritmo de enxame  de abelhas apresentou
+melhorias em  comparação com demais trabalhos,  incluindo convergência
+mais rápida para a melhor solução.
+
+Os  autores Sebastian  {\em et  al.}  \cite{5506245}  apresentaram uma
+mudança  no  esquema  de  roteamento  para  fazer  a  disseminação  de
+mensagens de  segurança mais eficientemente  em VANETs. O  problema de
+roteamento  \textit{multicast} foi  formulado como  uma \gls{smt}  com
+restrições de atraso.  O esquema de roteamento detecta os veículos que
+estão envolvidos e  ameaçados em casos de acidentes e  os coloca em um
+conjunto  de destinatários  das  mensagens de  alerta.   Há também  um
+recurso que  visa aumentar a  eficiência dos canais de  comunicação da
+rede sem  fio, visto  que há  uma seleção dos  nós que  receberão tais
+alertas de emergência, reduzindo assim o número de mensagens enviadas.
+
+Fazio {\em et al.}   \cite{fazio:2013} desenvolveram um novo protocolo
+para VANETs  que tem  em seu  núcleo um  algoritmo para  construção de
+rotas otimizadas.  Esse algoritmo  leva em consideração três métricas:
+\textit{delay} fim  a fim,  interferência co-canal e  probabilidade de
+duração da conexão.  A probabilidade  de duração do enlace é calculada
+por um método proposto pelos  próprios autores. O objetivo do trabalho
+é  encontrar   uma  árvore  geradora  mínima   considerando  todas  as
+restrições de  \gls{qos}.  A  validação do protocolo  desenvolvido foi
+feita com base na comparação de desempenho, utilizando um simulador de
+redes,  com   outros  protocolos  clássicos.   O   protocolo  proposto
+apresentou resultados superiores na  avaliação das métricas de largura
+de banda, taxa  de entrega de pacotes  e atraso fim a  fim.  Porém, os
+autores  notaram uma  pequena  sobrecarga de  processamento.  Além  da
+simulação do protocolo,  houve a avaliação do algoritmo  em relação ao
+seu desempenho em construir rotas de acordo com as restrições.
+
+Ribeiro {\em et al.} \cite{tiago:2019} desenvolveram uma formulação de
+\gls{pli}  e uma  heurística  \textit{relax-and-fix}  para resolver  o
+\gls{mrp-qos} aplicado às  VANETs. Dado um nó origem e  um conjunto de
+nós destino,  o objetivo é encontrar  a árvore que minimiza  a soma da
+quantidade de  saltos e \textit{delay}  fim a fim no  caminho, visando
+maximizar a seleção de \textit{links}  com maior estimativa de duração
+de  conexão   e  obedecendo  os  limites   máximos  de  \textit{delay}
+acumulado,   \textit{jitter}   acumulado,    variação   máxima   entre
+\textit{delays}  totais para  todos os  pares de  caminhos e  o limite
+mínimo  de  largura de  banda  para  cada  conexão. As  instâncias  de
+\textit{benchmark}  foram  geradas  utilizando  simuladores,  buscando
+proximidade com configurações reais. O  trabalho não faz comparação da
+heurística com a literatura, mas  apresenta um conjunto de técnicas de
+pré-processamento  e  a  diferença  de desempenho  relacionada  com  a
+utilização   dessas  técnicas   em   conjunto  com   o   modelo  e   o
+\textit{relax-and-fix}.
+
+É comum que autores abordem otimizações em redes VANETs propondo novas
+extensões  de protocolos  de  comunicação  com algoritmos  otimizados.
+Souza  \cite{souza:2012} apresentou  um protocolo  de roteamento  para
+VANETs que é baseado na  meta-heurística colônia de formigas. Com base
+no protocolo  MAODV ({\em Multicast  Ad hoc On-demand  Distance Vector
+  routing  protocol})  \cite{royer:2001},   o  autor  desenvolveu  uma
+extensão  que  utiliza informações  de  mobilidade  dos veículos  para
+aumentar  a   estabilidade  do  roteamento   \textit{multicast},  essa
+extensão é chamada  MAV-AODV. Para construção e  manutenção de árvores
+\textit{multicast}  foi utilizado  o algoritmo  baseado em  colônia de
+formigas. O método  de avaliação do protocolo utilizou  um ambiente de
+simulador de redes com uma quantidade variável de veículos (entre 25 e
+100), por 150  segundos e em um cenário de  1600 $\times$ 1500 metros.
+Para  análise do  desempenho foram  utilizados dois  outros protocolos
+(MAODV  e  PUMA,  {\em   Protocol  for  Unified  Multicasting  through
+  Announcement}  \cite{garcia:2004}) e  cinco  métricas de  \gls{qos}:
+\textit{delay}  fim  a fim,  variação  do  \textit{delay} fim  a  fim,
+sobrecarga de roteamento,  redundância e taxa de  entrega dos pacotes.
+Em  relação  ao MAODV,  o  MAV-AODV  obteve resultados  superiores  na
+maioria das métricas.  Porém, ao comparar  os resultados com o PUMA, o
+protocolo  MAV-AODV  obteve melhor  desempenho  apenas  na métrica  de
+redundância de pacotes.
+
+Correia {\em et al.} \cite{correia:2011} desenvolveram um protocolo de
+roteamento   baseado  no   DYMO   ({\em   Dynamic  MANET   On-demand})
+\cite{gupta:2013} que utiliza uma  estratégia de otimização baseada no
+algoritmo de colônia de formigas. Por ser um protocolo reativo, o DYMO
+permite a integração do procedimento de otimização efetuando operações
+do algoritmo de colônia de formigas,  tais como adição e evaporação de
+feromônios nas  rotas disponíveis. A estratégia  de otimização utiliza
+também a  velocidade e posição  dos veículos para auxiliar  na escolha
+das rotas.  Este protocolo foi validado em um software de simulação de
+rede,  com  um  cenário  de  tamanho  1600  $\times$  1500  metros,  a
+quantidade de veículos dividida em 5  tamanhos, 25, 50, 75, 100 e 150,
+e comparado  com dois outros protocolos,  DYMO nativo e AODV  ({\em Ad
+  hoc On-demand Distance  Vector routing protocol}) \cite{royer:2001}.
+Para fins  de comparação, fora  consideradas 3 métricas  de \gls{qos}:
+taxa  média  de  entrega  dos  pacotes, \textit{delay}  fim  a  fim  e
+sobrecarga  de roteamento.   A  análise dos  resultados confirmou  uma
+melhora do  novo protocolo  em relação  ao DYMO  nativo apenas  para a
+métrica de \textit{delay} fim a fim, enquanto o mesmo protocolo obteve
+melhor  desempenho  para  as  métricas  de taxa  média  de  entrega  e
+sobrecarga de roteamento em relação ao AODV.
+
+Bitam  {\em  et al.}   \cite{bitam:2013}  propuseram  um protocolo  de
+roteamento  híbrido  que  utiliza   as  vantagens  dos  protocolos  de
+roteamento  baseados em  topologia em  conjunto com  as vantagens  dos
+protocolos de  roteamento baseados  em informações  geográficas.  Este
+protocolo utiliza uma abordagem baseada em colônia de abelhas e aplica
+o conceito de roteamento \textit{unicast},  ou seja, existe uma origem
+e um  destino por vez.   Além disso, o  algoritmo possui um  módulo de
+otimização, baseado em algoritmo genético, cuja finalidade é tratar do
+roteamento  com base  em informações  geográficas. O  resultado a  ser
+retornado por este módulo  consiste em uma rota entre o  nó origem e o
+destino, levando  em consideração o  posicionamento dos nós,  custo de
+utilização das conexões, \textit{delay} fim a fim e a largura de banda
+mínima. Este  protocolo foi validado  utilizando simulador de  redes e
+comparando os resultados com os protocolos AODV (baseado em topologia)
+e  GPRS  ({\em  General  Packet  Radio  Service})  que  é  baseado  em
+informações  geográficas.  A  movimentação  dos veículos  da rede  foi
+simulada com base em um modelo de  tráfego em um trecho de 1000 metros
+quadrados da cidade de Biskra, na Argélia. Os experimentos trataram de
+20,  35  e  50  veículos,   analisando  três  métricas  de  \gls{qos},
+\textit{delay} fim  a fim, taxa  de pacotes entregues e  sobrecarga na
+rede.   O  protocolo  proposto   apresentou  bom  desempenho,  obtendo
+melhores resultados  se tratando  da métrica  de \textit{delay}  fim a
+fim.  Enquanto  que para a  métrica de  taxa de pacotes  entregues, os
+resultados foram competitivos com  os resultados do AODV, apresentando
+uma diferença inferior a 1$\%$. Por  fim, para a métrica de sobrecarga
+da rede, o protocolo proposto apresentou vantagem sobre o AODV e perda
+em relação ao GPRS.
+
+Saleet {\em  et al.}   \cite{saleet:2011} desenvolveram uma  classe de
+protocolos   para  VANETs   chamado   IGRP  ({\em   Intersection-based
+  Geographical   Routing   Protocol}),   que   apresentou   resultados
+superiores em comparação com demais protocolos de roteamento aplicados
+em ambientes  urbanos.  A ideia principal  do IGRP está na  seleção de
+interseções de  ruas pelas quais o  pacote deve passar para  atingir o
+seu destino.   Esta seleção é feita  de modo que existe  uma garantia,
+com  alta  probabilidade,  de  conectividade  da  rede  ao  longo  das
+interseções, enquanto satisfaz as  métricas de \gls{qos} utilizadas. O
+IGRP faz uso de uma rotina  baseada em algoritmo genético para seleção
+de  interseções.  O  protocolo  proposto foi  avaliado utilizando  uma
+ferramenta para simulação  de redes que executou por  1000 segundos em
+um cenário contendo  entre 150 e 600 nós. As  comparações para análise
+de  desempenho  se  deram  entre o  protocolo  desenvolvido  e  demais
+trabalhos  contidos na  literatura,  OLSR ({\em  Optimized Link  State
+  Routing protocol}) \cite{clausen:2003},  GPSR ({\em Greedy Perimeter
+  Stateless Routing})  \cite{karp:2000} e GPCR ({\em  Greedy Perimeter
+  Coordinator  Routing})  \cite{lochert:2005}.   O  IGRP  alcançou  os
+melhores  resultados  se tratando  das  métricas  de \textit{delay}  e
+quantidade de saltos, o que influencia  diretamente na taxa de erro de
+entrega  de mensagens,  na  qual o  protocolo  proposto também  obteve
+vantagem em relação aos demais.

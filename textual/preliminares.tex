@@ -1,0 +1,887 @@
+\chapter{Conceitos Preliminares e Formulações do Problema} \label{chp:preliminares}
+
+Neste capítulo introduzimos conceitos fundamentais para o entendimento
+desta dissertação.  Notações e  definições básicas são apresentadas na
+Seção  \ref{sec:not-e-def}.   Neste   trabalho,  empregamos  conceitos
+básicos  de  Otimização  Combinatória,  os  quais  assume-se  que  são
+conhecidos. Caso o leitor  julgue necessária uma revisão, recomendamos
+o livro texto de Nemhauser e Wolsey \cite{Nemhauser}, o qual cobre tal
+tema  com  enfoque  em   \gls{pli},  uma  das  principais  ferramentas
+utilizadas neste trabalho.  Os conceitos básicos relacionados à teoria
+dos  grafos  são  considerados  conhecidos  e  caso  o  leitor  julgue
+necessário uma revisão  o conteúdo pode ser encontrado  em algum livro
+texto  sobre o  tema,  por exemplo,  Diestel \cite{diestel:2005}.   Os
+modelos  matemáticos estão  contidos nas  Seções \ref{sec:dmfm-pma}  e
+\ref{sec:ab-pma}.   A   Seção  \ref{sec:rel-lagrangiana}   contém  uma
+descrição do  funcionamento e aplicação da  relaxação lagrangiana, uma
+das  principais abordagens  por nós  utilizada.  Por  fim, nas  Seções
+\ref{sec:metaheuristic}  e  \ref{subsec:brkga}  discutimos,  de  forma
+geral, meta-heurísticas e \gls{brkga}.
+
+\section{Notações e Definições} \label{sec:not-e-def}
+
+Seja um grafo  ponderado e direcionado $G  = (V, A)$, sendo  $V = \{1,
+\dots, n\}$ seu conjunto  de vértices, $A = \{(u, v) : u  \text{ e } v
+\in V, u \neq v\}$ seu conjunto  de $m$ arcos, onde o primeiro vértice
+do  arco é  a fonte  e também  predecessor do  segundo vértice  do par
+ordenado, que  é conhecido  como destino.   Tratando-se de  grafos não
+direcionados, podemos  substituir a nomenclatura do  conjunto de arcos
+$A$ pelo conjunto  de arestas $E$. Uma árvore $T$,  obtida a partir de
+um grafo  não orientado  $G$, é um  subgrafo de $G$  conexo e  que não
+contém  ciclos. Para  que  $T$  seja geradora  em  $G$  o conjunto  de
+vértices $V(T)$ deve ser igual a $V(G)$, ou seja, todos os vértices do
+grafo fazem parte da árvore. Uma arborescência, ou árvore enraizada, é
+um grafo direcionado  no qual exatamente um vértice,  digamos $s$, tem
+grau de  entrada $0$ e  nenhum vértice tem  grau de entrada  maior que
+$1$, de modo  que todos os vértices do grafo  são alcançáveis a partir
+da raiz $s$.
+
+Segue  uma  definição  formal  do  \gls{pma}.   Seja  uma  rede  VANET
+representada como  um grafo direcionado  ponderado $G = (V,  A)$. Cada
+arco de  $G$ contém três  métricas de \gls{qos} associadas:  {\delay ,
+  \jitter} e largura  de banda.  Definimos a entrada  o \gls{pma} como
+uma  tupla  ($G(V,  A),  \lambda,   \xi,  \omega,  s,  D,  \Delta_{d},
+\Delta_{j}, \Delta_{v}, \Phi$), onde:
+
+\begin{itemize}
+    \item $G = (V, A)$ é um grafo ponderado orientado;
+    \item $\lambda_{ij} :  A \rightarrow \mathbb{N}$ é  uma função que
+      retorna o valor de \textit{delay} para cada arco $(i, j) \in A$;
+    \item  $\xi_{ij} :  A  \rightarrow \mathbb{N}$  é  uma função  que
+      retorna o  valor de \textit{jitter}  para cada arco $(i,  j) \in
+      A$;
+    \item $\omega_{ij}  : A \rightarrow  \mathbb{N}$ é uma  função que
+      retorna o valor  de largura de banda para cada  arco $(i, j) \in
+      A$;
+    \item $s \in V$ é definido como a raiz;
+    \item $D$ é o conjunto de vértices terminais, tal que $D \subseteq
+      (V \backslash \{s\}$);
+    \item  $\Delta_{d}$  é  uma  constante  que  indica  o  limite  de
+      \textit{delay} fim a fim permitido no caminho de $s$ até cada um
+      dos vértices de $D$;
+    \item  $\Delta_{j}$  é  uma  constante  que  indica  o  limite  de
+      \textit{jitter}  permitido no  caminho de  $s$ até  cada um  dos
+      vértices de $D$;
+    \item $\Delta_{v}$ é uma constante que indica o limite da variação
+      dos atrasos  fim a fim entre  todos os pares de  caminhos de $s$
+      até algum vértice de $D$;
+    \item $\Phi$  é uma constante  que indica  o mínimo de  largura de
+      banda necessário para que um  arco qualquer possa fazer parte da
+      solução;
+\end{itemize}
+
+O conjunto $S \in V \backslash (D \cup \{s\})$ é composto por todos os
+vértices  restantes de  $V$. Assim,  os vértices  do conjunto  $S$ são
+chamados de  opcionais ou  de \textit{Steiner}. Vale  também ressaltar
+que,   como  as   conexões  para   comunicação  da   rede  VANET   são
+bidirecionais, se  o arco $(i, j)$  pertence a $A$, então  o arco $(j,
+i)$   também  está   contido  em   $A$  com   os  mesmos   valores  de
+\gls{qos}. Quando a largura de banda $\omega$ de um arco $(i, j)$ está
+com  o valor  abaixo do  limite demandado  pela \gls{qos}  ($\Phi$), o
+mesmo não é adicionado ao conjunto $A$ e, consequentemente, nunca será
+parte  de   uma  solução  viável  do   \gls{pma}.   Uma  arborescência
+\textit{multicast} $T$ de  $G$ tem o vértice fonte $s$  como sua raiz,
+alcança todos  os vértices terminais  em $D$ e,  possivelmente, alguns
+vértices de $S$, mas não necessariamente todos.
+
+O grafo descrito acima permite  uma modelagem correta do problema, mas
+é  possível garantir  que qualquer  solução viável  corresponda a  uma
+arborescência geradora. Isso é  conveniente pois formulações fortes de
+programação  inteira  para  arborescências  geradoras  são  conhecidas
+\cite{MAGNANTI1995503}.   As seguintes  mudanças  foram realizadas  no
+grafo  para  garantir  a  existência  de  uma  solução  que  seja  uma
+arborescência geradora:
+
+\begin{enumerate}
+    \item  Adiciona-se  um vértice  artificial  $s'$  e um  novo  arco
+      artificial  de  $s$ para  $s'$  cujo  \textit{delay} é  igual  a
+      $\Delta_d + 1$ e \textit{jitter} igual a $\Delta_j + 1$.
+    \item São  adicionados arcos de  $s'$ para  cada vértice $k  \in D
+      \cup S$ com \textit{delay} e \textit{jitter} iguais a 0.
+\end{enumerate}
+
+
+O grafo resultante é $G' = (V', A')$,  onde $V' = V \cup \{s'\}$ e $A'
+= A \cup \{(s, s')\} \cup \{(s', k) : k \in D \cup S\}$. Como foi dito
+anteriormente,   soluções   viáveis   nesse  grafo   são   dadas   por
+arborescências  geradoras  na  qual  $s$  é  a  raiz.   Contudo,  para
+representar  adequadamente  soluções   factíveis,  algumas  restrições
+precisam ser acrescentadas.   A arborescência deve conter  o arco $(s,
+s')$ e  se o caminho  de $s$ até qualquer  terminal $k$ utilizar  o nó
+$s'$ como intermediário, então $k$  não é atendido. O propósito dessas
+restrições é fazer com que haja uma  subárvore onde $s'$ é a raiz e os
+nós  opcionais que  não foram  utilizados como  encaminhadores ou  nós
+terminais não atendidos sejam visitados pela arborescência a partir de
+$s'$.
+
+Utilizando como exemplo  o grafo $G$ e a  arborescência apresentada na
+Figura  \ref{fig:ex1}  do  capítulo anterior,  serão  ilustradas  duas
+possíveis  soluções  viáveis  com  base  em  $G$  e  $G'$.   A  Figura
+\ref{fig:arb-ex1} descreve uma solução viável  obtida a partir de $G$,
+enquanto  a Figura  \ref{fig:arb-ex2} apresenta  uma arborescência  na
+qual o  mesmo número de  terminais é  atendido mas a  representação da
+solução  é  uma  arborescência  geradora  que utiliza  o  nó  e  arcos
+artificiais.
+
+\begin{figure}[!ht]
+  \begin{subfigure}{.5\textwidth}
+  \centering
+  \begin{tikzpicture}[
+      > = stealth, % arrow head style
+      shorten > = 0.8pt, % don't touch arrow head to node
+      auto,
+      node distance = 1.5cm, % distance between nodes
+      semithick, % line style
+    ]
+
+    \tikzstyle{every state}=[
+      draw = black,
+      thick,
+      fill = white,
+      minimum size = 8mm
+    ]
+    
+    \node[state, double, draw = red] (a) [at={(5, 2.5)}]{$1$};
+    \node[state, double, rectangle, draw = blue] (e) [at={(4.25, 1)}] {$5$};
+    \node[state, double, rectangle, draw = blue] (h) [at={(5, -0.5)}] {$8$};
+    \node[state, double, rectangle, draw = blue] (c) [at={(3.25, -0.5)}] {$3$};
+    \node[state] (g) [at={(2.25, -2)}] {$7$};
+    \node[state] (i) [at={(4.25, -3)}] {$9$};
+    \node[state, rectangle, draw = blue] (j) [at={(2.25, -4)}] {$10$};
+
+    \path[->] (a) edge node {} (e); 
+    \path[->] (e) edge node {} (c);
+    \path[->] (e) edge node {} (h);
+    \path[->] (c) edge node {} (g);
+    \path[->] (g) edge node {} (i);
+    \path[->] (i) edge node {} (j);
+
+  \end{tikzpicture}
+  \subcaption{\label{fig:arb-ex1} Arborescência obtida a partir de G}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \centering
+  \begin{tikzpicture}[
+      > = stealth, % arrow head style
+      shorten > = 0.8pt, % don't touch arrow head to node
+      auto,
+      node distance = 1.5cm, % distance between nodes
+      semithick, % line style
+    ]
+
+    \tikzstyle{every state}=[
+      draw = black,
+      thick,
+      fill = white,
+      minimum size = 8mm
+    ]
+    
+    \node[state, double, draw = red] (a) [at={(5, 2.5)}]{$1$};
+    \node[state, double, rectangle, draw = blue] (e) [at={(4.25, 1)}] {$5$};
+    \node[state, draw = gray] (z) [at={(7.5, 1)}] {$s'$};
+    \node[state, double, rectangle, draw = blue] (h) [at={(5, -0.5)}] {$8$};
+    \node[state, double, rectangle, draw = blue] (c) [at={(3.25, -0.5)}] {$3$};
+    \node[state] (g) [at={(8, -2)}] {$7$};
+    \node[state] (i) [at={(9, -2)}] {$9$};
+    \node[state, rectangle, draw = blue] (j) [at={(10, -2)}] {$10$};
+    \node[state] (b) [at={(5, -2)}] {$2$};
+    \node[state] (d) [at={(6, -2)}] {$4$};
+    \node[state] (f) [at={(7, -2)}] {$6$};
+%    \node[state] (j) [at={(7.5,-2)}] {$8$};
+%    \node[state] (k) [at={(8.4,-2)}] {$9$};
+%    \node[state] (l) [at={(9.3,-2)}] {$10$};
+%    
+    \path[->] (a) edge node {} (e); 
+    \path[->] (e) edge node {} (c);
+    \path[->] (e) edge node {} (h);
+    \path[->] (z) edge node {} (g);
+    \path[->] (z) edge node {} (i);
+    \path[->] (z) edge node {} (j);
+    \path[->] (z) edge node {} (b);
+    \path[->] (z) edge node {} (d);
+    \path[->] (z) edge node {} (f);
+    \path[->] (a) edge node {} (z);    
+  \end{tikzpicture}
+  \vspace*{2cm}
+  \subcaption{\label{fig:arb-ex2} Arborescência obtida a partir de G'}
+  \end{subfigure}
+\end{figure}
+
+Com base  na adaptação para  garantir que toda solução  é representada
+por  uma  arborescência  geradora,  desenvolvemos  uma  formulação  de
+\gls{pli}  para  o  \gls{pma},  baseada na  formulação  de  multifluxo
+apresentada por Magnanti e  Wolsey \cite{MAGNANTI1995503}, a qual será
+denotada no restante deste  documento por \gls{dmfm-pma}, um mnemônico
+do inglês {\em \textbf{D}irected \textbf{M}ulticommodity \textbf{F}low
+  \textbf{M}odel}  - MRP.   A segunda  modelagem desenvolvida  utiliza
+programação inteira mista,  ou seja, utiliza-se de  variáveis reais em
+conjunto com as variáveis inteiras.  Esse segundo modelo foi elaborado
+com base  na remoção das variáveis  de fluxo do \gls{dmfm-pma}  e será
+denotada no  restante do documento  por \gls{ab-pma}, um  mnemônico do
+inglês {\em \textbf{A}rborescence \textbf{B}ased} - MRP.
+
+\section{Modelo de PLI DMFM-MRP} \label{sec:dmfm-pma}
+
+Dada uma instância  $I_{MS-MRP-QoS} = (G(V, A),  \lambda, \xi, \omega,
+s,  D, \Delta_{d},  \Delta_{j}, \Delta_{v},  \Phi)$ para  o \gls{pma},
+considere as seguintes variáveis:
+
+\begin{itemize}
+ \item $f_{ij}^{k}$: Uma variável binária indicando se o arco $(i, j)$
+   pertence ao caminho da fonte $s$ até o vértice $k$ tal que $k \in D
+   \cup S$,  alternativamente, se o fluxo  de $s$ para $k$  passa pelo
+   arco $(i, j)$;
+ \item $y_{ij}$: Uma  variável binária que recebe valor 1  caso o arco
+   $(i, j)$ pertença a arborescência ótima e 0 caso contrário;
+ \item $z_{k}$: Uma variável binária que  recebe valor 1 se o terminal
+   $k$ não é atendido e 0 caso contrário.
+\end{itemize}
+
+Assim, um modelo de programação inteira para o \gls{pma} é:
+
+\allowdisplaybreaks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{align}
+\text{(IP)} \quad 
+    & \displaystyle \min \sum_{k \in D}z_k & \label{eq:mod-fo} \\
+\text{s.a.:} \quad
+    & \displaystyle \sum_{(s, j) \in A'} f_{sj}^{k} - \sum_{(j, s) \in A'} f_{js}^{k} = 1 & \forall k \in D \label{eq:fluxo-raiz} \\
+    & \displaystyle \sum_{(i, j) \in A'} f_{ij}^{k} - \sum_{(j, i) \in A'} f_{ji}^{k} = 0 & \forall j \in V \backslash \{s, k\}, \forall k \in D \cup S \label{eq:fluxo-qualquer} \\
+    & \displaystyle \sum_{(k, j) \in A'} f_{kj}^{k} - \sum_{(j, k) \in A'} f_{jk}^{k} = -1 & \forall k \in D \cup S \label{eq:fluxo-terminal} \\
+    & f_{ij}^{k} \leq  y_{ij} & \forall (i, j) \in A', \forall k \in D \cup S \label{eq:rel-f-y-term} \\
+    & \displaystyle \sum_{(i, j) \in A'} y_{ij} = |V| & \label{eq:num-arestas-arvore} \\
+    & \displaystyle \sum_{(i, j) \in A'} \lambda_{ij}f_{ij}^{k} \leq  \Delta_{d} + M_dz_k
+     & \forall k \in D \label{eq:mod-lim-delay} \\
+%- modificada --------------------------------------------------------
+    & \displaystyle \sum_{(i, j) \in A'} \xi_{ij}f_{ij}^{k} \leq  \Delta_{j} + M_jz_k
+     & \forall k \in D \label{eq:mod-lim-jitter} \\
+%- modificada --------------------------------------------------------
+    & \displaystyle \sum_{(i, j) \in A'} \lambda_{ij}(f_{ij}^{k} - f_{ij}^{l}) \leq \Delta_{v} 
+       + M_v^kz_k + M_v^lz_l 
+    & \forall k, l \in D, k \neq l \label{eq:mod-var-delay} \\
+    %& z_k \geq f_{ss'}^{k} & \forall k \in D \label{eq:fluxo-terminal-dummy-node} \\
+    %& f_{s'q}^{e} = 0  & \forall q \in D \cup S, \forall e \in D \cup S \backslash\{q\} \label{eq:steiner-leaf} \\
+    & y_{ss'} = 1 & \label{eq:force-dummy-node} \\
+%---------------------------------------------------------------------
+    & f_{ij}^{k} \in \{0, 1\} & \forall (i, j) \in A', \forall k \in D \cup S \label{eq:dom-f} \\
+    &  y_{ij} \in \{0, 1\} &  \forall (i, j) \in A' \label{eq:dom-y} \\
+    &  z_{i} \in \{0, 1\} &  \forall i \in D \label{eq:dom-z} 
+\end{align}
+
+O  modelo  \gls{dmfm-pma}  apresenta como  solução  uma  arborescência
+conectando  a  raiz a  todos  os  nós  terminais.  A  função  objetivo
+\eqref{eq:mod-fo} minimiza  o número  de terminais não  atendidos.  As
+restrições  \eqref{eq:fluxo-raiz}-\eqref{eq:fluxo-terminal}  impõem  a
+conservação de  fluxo em cada  vértice, forçando ainda que  apenas uma
+unidade de fluxo  saia da fonte $s$  para cada destino $K  \in D$.  As
+restrições  \eqref{eq:rel-f-y-term}   garantem  que  não   haja  fluxo
+passando por  um arco $(i,  j)$ e dirigindo-se a  um vértice $k  \in D
+\cup S$,  a menos  que esse  arco pertença  à arborescência  ótima.  A
+restrição \eqref{eq:num-arestas-arvore} força que a solução tenha $|V|
+= |D| + |S| + 1$ arcos,  portanto, gera todos os vértices de $G'$.  As
+restrições \eqref{eq:mod-lim-delay}-\eqref{eq:mod-lim-jitter} limitam,
+respectivamente,  o delay  e o  jitter no  caminho para  cada terminal
+atendido.   As   restrições  \eqref{eq:mod-var-delay}  exigem   que  a
+diferença entre os \textit{delays} de  quaisquer dois caminhos que vão
+de $s$ até um  terminal $k \in D$ não seja  maior que $\Delta_v$, caso
+ambos     os    terminais     sejam     atendidos.     A     restrição
+\eqref{eq:force-dummy-node} garante que o arco $(s, s')$ faça parte da
+solução final,  evitando a ocorrência  de ciclos com  a característica
+$y_{ij}    =    y_{ji}    =    1$.     Finalmente,    as    restrições
+\eqref{eq:dom-f}-\eqref{eq:dom-z} definem os domínios das variáveis.
+
+É  necessário  ainda  uma  descrição  mais  detalhada  das  restrições
+(\ref{eq:mod-lim-delay}),          (\ref{eq:mod-lim-jitter})         e
+(\ref{eq:mod-var-delay}).   As  duas  primeiras  restrições  tornam-se
+inativas quando o  terminal ao qual elas se referem  não for atendido,
+enquanto a última restrição torna-se  inativa quando pelo menos um dos
+terminais  ao qual  ela se  refere não  for atendido.   Para isso,  os
+parâmetros  $M_d$,  $M_j$,  $M_v^k$  e $M_v^l$  devem  ser  escolhidos
+convenientemente de  modo a  manter as restrições  válidas.  Possíveis
+valores para esses parâmetros serão discutidos posteriormente.
+
+\section{Modelo de Programação Inteira Mista - AB-MRP} \label{sec:ab-pma}
+
+Dada uma  instância $I_{PMA} = (G(V,  A), \lambda, \xi, \omega,  s, D,
+\Delta_{d}, \Delta_{j}, \Delta_{v}, \Phi)$ para o \gls{pma}, considere
+as seguintes variáveis:
+
+\begin{itemize}
+ \item $y_{ij}$: Uma  variável binária que recebe valor 1  caso o arco
+   $(i, j)$ pertença à arborescência ótima e 0 caso contrário;
+ \item $z_{k}$: Uma variável binária que  recebe valor 1 se o terminal
+   $k$ não é atendido e 0 caso contrário;
+ \item $a_{i}$: Uma  variável real que representa  o \textit{delay} do
+   caminho de $s$ até $i$, caso $i$ faça parte da arborescência ótima;
+ \item $t_{i}$: Uma variável real  que representa o \textit{jitter} do
+   caminho de $s$ até $i$, caso $i$ faça parte da arborescência ótima;
+\end{itemize}
+
+Assim, o  modelo de  programação linear  inteira mista  \gls{ab-pma} é
+proposto a seguir:
+
+\begin{align}
+ & \text{(MIP)} \min \sum_{k \in D} z_k & \label{eq:ab-fo} \\ 
+ & \sum_{(i, j) \in A'} y_{ij} = 1 & \forall j \in D \cup S \label{eq:spanning} \\
+ %& \sum_{(i, j) \in A^{-}(S)} y_{ij} \geq 1 & \forall S \in V\backslash \{s\} \label{eq:desigualdade-opicional}\\
+ & a_j \geq a_i + \lambda_{ij} y_{ij} - M_d(1 - y_{ij}) & \forall (i, j) \in A' \label{eq:lambda-geq} \\
+ & a_j \leq a_i + \lambda_{ij} y_{ij} + M_d(1 - y_{ij}) & \forall (i, j) \in A' \label{eq:lambda-leq} \\
+ & t_j \geq T_i + \xi_{ij} y_{ij} - M_j(1 - y_{ij})& \forall (i, j) \in A' \label{eq:xi-geq} \\
+ %& t_j \leq T_i + \xi_{ij} y_{ij} + M_j(1 - y_{ij})& \forall (i, j) \in A' \label{eq:xi-leq} \\
+ & a_k \leq \Delta_d + M_d z_k & \forall k \in D \label{eq:lim-delay} \\
+ & t_k \leq \Delta_j + M_j z_k & \forall k \in D \label{eq:lim-jitter} \\
+ & a_k - a_l \leq \Delta_v + M_v^k z_k + M_v^l z_l & \forall k, l \in D, k \neq l \label{eq:lim-var} \\
+ %& y_{ss'} = 1 & \label{eq:ab-force-art-vert} \\
+ & y_{ij} \in \{0, 1\} & \forall (i, j) \in A' \label{eq:ab-dom-y} \\
+ & z_{k} \in \{0, 1\} & \forall k \in D \label{eq:ab-dom-z}\\
+ & a_i, t_i \geq 0 & \forall i \in V \label{eq:ab-dom-l-t} 
+\end{align}
+
+No  modelo  \gls{ab-pma}  uma  solução  representa  uma  arborescência
+geradora  mínima onde  os valores  das métricas  de \gls{qos}  de cada
+caminho são  calculadas nos  nós.  A função  objetivo \eqref{eq:ab-fo}
+minimiza  o   número  de  terminais  não   atendidos.   As  restrições
+\eqref{eq:spanning}  garantem  que  a arborescência  é  geradora.   As
+restrições   \eqref{eq:lambda-geq}-\eqref{eq:lambda-leq}  calculam   o
+custo de  \textit{delay} em cada vértice  $j$, de modo que,  se o arco
+$(i, j)$ pertencer  a arborescência ótima, o valor de  $a_j$ é igual a
+$a_i + \lambda_{ij}$. As  restrições \eqref{eq:xi-geq} aplicam o mesmo
+princípio  das  restrições  \eqref{eq:lambda-geq} sobre  as  variáveis
+$t_i$. Para a variável  $a_k$, o delay em um nó $k \in  D \cup S$ será
+exatamente  o  {\delay} acumulado  no  caminho  até  $k$. No  caso  da
+variável $t_k$, é  suficiente que ela seja maior ou  igual ao valor de
+{\jitter}  acumulado, pois  ao contrário  do {\delay}  não existe  uma
+restrição  limitando a  variação de  {\jitter}. Cabe  observar que  os
+valores  computados   para  as   variáveis  $l_k$  e   $t_k$  dependem
+diretamente  dos valores  das mesmas  variáveis no  nó predecessor  de
+$k$. Essa dependência impede a formação de ciclos na solução ótima. As
+restrições       \eqref{eq:lim-delay}-\eqref{eq:lim-var}       limitam
+respectivamente \textit{delay}, \textit{jitter} e variação de {\delay}
+utilizando      a       mesma      abordagem       das      restrições
+\eqref{eq:mod-lim-delay}-\eqref{eq:mod-var-delay}       do      modelo
+\gls{dmfm-pma}.          Por         fim,        as         restrições
+\eqref{eq:ab-dom-y}-\eqref{eq:ab-dom-l-t}  definem   os  domínios  das
+variáveis.
+
+\subsection{Possíveis valores para os parâmetros $M$} \label{subsec:m-param}
+
+A  seguir discutiremos  sobre possíveis  valores das  constantes $M_d,
+M_j, M^k_v$ e $M^l_v$. Foram propostos valores que podem ser aplicados
+à modelagem  considerando o  grafo $G$  sem a adição  dos nós  e arcos
+artificiais.  Também foram propostos  valores que podem ser utilizados
+apenas para o grafo for $G'$.
+
+Inicialmente, suponha  que os  arcos do grafo  $G=(V, A)$  tenham sido
+indexadas de  1 a $m  = |A|$,  ou seja, $A  = \{e_1,e_2,\ldots,e_m\}$.
+Suponha também que $\lambda_{e_1}  \geq \lambda_{e_2} \geq \ldots \geq
+\lambda_{e_m}$. Agora, para $n=|V|$, qualquer caminho simples no grafo
+tem  no  máximo  $n-1$ arcos  e,  portanto,  $\Lambda=\sum_{i=1}^{n-1}
+\lambda_{e_i}$ é um limitante superior  para o \textit{delay} total de
+qualquer  caminho no  grafo.   De forma  análoga,  pode-se definir  um
+limitante superior para o  \textit{jitter} de qualquer caminho simples
+de $G$, o  qual será denotado por $\Xi$.  Também  será usada a notação
+$SP_\lambda(k)$ para o  comprimento do caminho mais curto  da raiz $s$
+para o vértice $k$ de $G$ utilizando como métrica o \textit{delay}.
+
+Com  as definições  do  parágrafo anterior,  pode-se computar  valores
+viáveis para as constantes $M_d$, $M_j$, $M_v^k$ e $M_v^l$ da seguinte
+forma:
+
+\begin{align}
+  M_d = & \quad \Lambda-\Delta_d & \label{it:delay} \\
+  M_j = & \quad \Xi-\Delta_j & \label{it:jitter} \\
+  M_v^k = & \quad \Lambda-\mu, \text{ onde } \mu=\min\{\text{SP}_\lambda(l)+\Delta_v,\Delta_d\} & \label{it:vardelay-k}\\
+  M_v^l = & \quad \Delta_d - \Delta_v - \text{SP}_\lambda(l) & \label{it:vardelay-l}
+\end{align}
+
+Considerando  as  definições de  $\Lambda$  e  $\Xi$ e  analisando  as
+restrições (\ref{eq:mod-lim-delay}) e (\ref{eq:mod-lim-jitter}), temos
+que se o terminal $k$ for  atendido ($z_k = 0$), essas duas restrições
+limitam o {\delay} e o  {\jitter} conforme determinado pela \gls{qos}.
+Por outro lado,  se $k$ não for  atendido ($z_k = 1$), o  {\delay} e o
+{\jitter} acumulado no caminho de $s$  a $k$ ficam restritos de acordo
+com  os seus  limitantes superiores  $\Lambda$ e  $\Xi$ subtraídos  do
+valor  máximo de  acumulado para  que $k$  seja atendido,  usando como
+métricas o {\delay} e o {\jitter}, respectivamente.
+
+A restrição (\ref{eq:mod-var-delay}), que  controla a variação de {\em
+  delay}, requer uma análise mais aprofundada.  O objetivo é encontrar
+um  limitante superior  para o  lado direito  da restrição  nas quatro
+situações  possíveis de  atendimento  do par  de  terminais $(k,  l)$,
+explicadas a seguir  considerando que as constantes  $M^k_v$ e $M^l_v$
+assumem  os valores  descritos  nas  Equações \eqref{it:vardelay-k}  e
+\eqref{it:vardelay-l}.
+
+%Verifica-se que  computando $M_v^k$  e $M_v^l$ como  determinado pelos
+%itens \eqref{it:vardelay-k}  e \eqref{it:vardelay-l} fica  garantida a
+%validade da desigualdade.  Abaixo estão descritos os casos possível da
+%restrição \eqref{eq:mod-var-delay}  e os  valores que  serão assumidos
+%pelas constantes $M_v^k \text{ e } M_v^l$.
+
+\noindent\paragraph*{{\bf Caso  1} ($z_k =  0, z_l = 0$).}   Quando os
+dois  terminais, $k$  e  $l$,  são atendidos,  limita  a diferença  de
+\textit{delay}  entre os  pares em  $\Delta_v$ e,  portanto, é  válida
+neste caso.
+
+\noindent\paragraph*{{\bf  Caso   2}  ($z_k=0,  z_l=1$).}    Quando  o
+terminal $k$ é  atendido mas $l$ não, o lado  esquerdo da desigualdade
+será no máximo $\Delta_d-SP_\lambda(l)$ (o terminal $k$ é atendido com
+o limite máximo de {\em delay} permitido e o terminal $l$ com o mínimo
+de {\em  delay} requerido para  ir de $s$ a  $l$). Neste caso,  o lado
+direito da restrição será dado por
+$$\Delta_v+M_v^l=\Delta_v+\Delta_d - \Delta_v - SP_\lambda(l)=\Delta_d-SP_\lambda(l),$$
+\noindent
+garantindo, assim, a validade da desigualdade neste caso.
+
+\noindent\paragraph*{{\bf  Caso   3}  ($z_k=1,  z_l=0$).}    Quando  o
+terminal $l$ é  atendido mas $k$ não, o lado  esquerdo da desigualdade
+será no máximo $\Lambda-SP_\lambda(l)$ (o terminal $k$ é alcançado por
+um caminho simples com o limite máximo de {\em delay} e o terminal $l$
+com o  mínimo de {\em  delay} requerido para ir  de $s$ a  $l$). Neste
+caso, o lado direito da restrição será dado por
+$$\Delta_v+M_v^k=\Delta_v+\Lambda-\mu \geq \Delta_v+\Lambda-SP_\lambda(l)-\Delta_v=\Lambda-SP_\lambda(l),$$
+\noindent
+garantindo, assim, a validade da desigualdade neste caso.
+
+\noindent\paragraph*{{\bf  Caso   4}  ($z_k=1,  z_l=1$).}    Quando  o
+terminal $l$ e $k$ não são  atendidos, o lado esquerdo da desigualdade
+será no máximo $\Lambda-SP_\lambda(l)$ (o terminal $k$ é alcançado por
+um caminho simples com o limite máximo de {\em delay} e o terminal $l$
+com o  mínimo de {\em  delay} requerido para ir  de $s$ a  $l$). Neste
+caso, o lado direito da restrição será dado por
+$$\Delta_v+M_v^k+M_v^l=
+  \Delta_v+\Lambda-\mu+\Delta_d - \Delta_v - SP_\lambda(l)=
+  \Lambda-SP_\lambda(l)+(\Delta_d-\mu) \geq \Lambda-SP_\lambda(l),$$
+\noindent
+garantindo, assim, a validade da desigualdade neste caso.
+
+Considerando  agora o  grafo $G'$,  é possível  alterar as  constantes
+associadas    com    as    restrições    \eqref{eq:mod-lim-delay}    e
+\eqref{eq:mod-lim-jitter}, utilizando $M_d =  M_j = 1$.  Esses valores
+são válidos pois se  o caminho da raiz $s$ até  o terminal $k$ atender
+as  métricas  de  {\delay}  e  {\jitter},  tanto  $M_d$  quanto  $M_j$
+tornam-se irrelevantes. Além  disso, se o terminal $k$  não é atendido
+então o  caminho para visitá-lo  passará pelos arcos  artificiais $(s,
+s')$ e  $(s', k)$,  que, conforme  a construção  de $G'$  explicada na
+Seção \ref{sec:not-e-def},  possuem {\delay s}  $\Delta + 1$ e  $0$, e
+{\jitter s} $\Delta_j + 1$  e $0$, respectivamente. Portanto, em $G'$,
+$\Delta_d + 1$ e $\Delta_j + 1$ são limitantes superiores válidos para
+{\delay}  e  {\jitter},  respectivamente.  O  objetivo  da  utilização
+desses  valores  para  os   parâmetros  visa  desconsiderar  todos  os
+terminais que não  são atendidos, de modo que, por  mais que exista um
+caminho para atingir  $k$ que não passe pelo nó  artificial $s'$, esse
+caminho  demanda  mais  que  $\Delta_d$ ou  $\Delta_j$  de  recurso  e
+portanto $k$ continua como não atendido na arborescência gerada.
+
+\section{Relaxação Lagrangiana} \label{sec:rel-lagrangiana}
+
+A \gls{rl} é um conhecido método de decomposição usado na resolução de
+problemas de otimização combinatória. A  ideia principal da \gls{rl} é
+remover restrições  complicadas do  modelo matemático  e transferi-las
+para   a   função  objetivo   atribuindo   a   elas  pesos   (chamados
+multiplicadores de  Lagrange) que irão  penalizar uma solução  que não
+satisfaz alguma das restrições dualizadas. É possível demonstrar que o
+custo de uma  solução ótima da \gls{rl} sempre será  um limitante dual
+para o valor ótimo do problema original.  Um limitante primal pode ser
+obtido a partir da constatação da viabilidade de uma solução retornada
+pelo modelo  relaxado, bastando para  isto computar o valor  da função
+objetivo original para esta solução.  Uma etapa importante da \gls{rl}
+é  determinar  os valores  para  os  multiplicadores lagrangianos  que
+resultam  no melhor  limitante dual.   Para isso,  pode ser  adotado o
+método de subgradiente que consiste  em um processo iterativo por meio
+do  qual   os  multiplicadores  são  atualizados   iterativamente  até
+convergirem  para  seus  valores  ótimos.   Considerando  um  problema
+originalmente  de  minimização, este  método  pode  ser visto  como  a
+maximização do limite inferior obtido  pelo modelo relaxado baseado em
+escolhas adequadas de multiplicadores \cite{Beasley:1993}.
+
+\gls{rl}  é  bastante  conveniente   para  problemas  que  quando  são
+modelados matematicamente de modo que, não fosse por um subconjunto de
+restrições   complicadoras,   podem    ser   resolvidos   de   maneira
+eficiente. Por exemplo, considere o seguinte modelo de \gls{pli}:
+\begin{align*}
+    \text{(IP) } & & & z = \min cx & & & & & & & & \\
+    &\text{s.a. } & & Ax \geq b, & & & & & & & & \\
+    & & & Dx \geq d, & & & & & & & & \\
+    & & & x \in \mathbb{Z}^n_+. & & & & & & & &
+\end{align*}
+
+Sendo $Dx  \geq d$ o  conjunto de restrições complicadoras  do modelo,
+removê-las resulta em $z' = \min \{cx :  x \in X\}$, onde $X = \{x \in
+\mathbb{Z}^n_+\ : Ax \geq b\}$, o qual é um problema mais fácil de ser
+resolvido,  podendo ser  chamado  também de  problema relaxado.   Dois
+fatos  podem ser  observados. O  primeiro é  que $z'$  é um  limitante
+inferior  (dual) de  $z$,  uma  vez que,  com  uma  restrição a  menos
+delimitando a região viável de $x$,  o valor obtido em $z'$ será menor
+ou  igual  a  $z$.  O  segundo  é  que  a  solução ótima  em  $X$  não
+necessariamente  satisfaz  às restrições  em  $Dx  \geq d$.   Partindo
+dessas observações, a ideia é levar as restrições complicadoras para a
+função objetivo, penalizando-as com um vetor $u \in \mathbb{R}^{m}_+$.
+Feito  isso, o  problema resultante,  chamado de  \gls{ppl}, pode  ser
+escrito como:
+
+\begin{align*}
+    \text{PPL($u$) } & & & z(u) = \min cx  + u(d - Dx) & & & & & & & \\
+    & \text{s.a. } & & x \in X, & & & & & & & \\
+    & & & u \in \mathbb{R}^m_+. & & & & & & &
+\end{align*}
+
+A proposição a seguir estabelece a relação entre $z(u)$ e $z$.
+\begin{proposition}
+Seja $z(u) = \min \{cx  + u (d - Dx) : x \in  X\} $. Então, $z(u) \leq
+z$ para todo $u \geq 0$.
+\end{proposition}
+A penalidade $u_i$ associada à restrição  $D_ix \geq d_i$ é chamada de
+multiplicador de  Lagrange dessa  restrição.  Tem-se agora  o seguinte
+problema: calcular  o conjunto de multiplicadores  que correspondem ao
+melhor, isto  é maior,  limitante dual  $z(u)$.  Para  encontrar esses
+valores é necessário resolver o \gls{pdl}, descrito como:
+
+\begin{align*}
+    \text{PDL($u$) } & & & w = \max \{z(u) : u \geq 0\}. & & & & &
+\end{align*}
+
+Para  resolver  o  \gls{pdl}  existe o  algoritmo  de  otimização  por
+subgradiente, que se baseia no seguinte resultado.
+%m duas alternativas.  A  primeira é a
+%utilização  de um  problema de  programação linear  e um  algoritmo de
+%planos de  corte. A  segunda alternativa  é o uso  de um  algoritmo de
+%otimização por subgradiente, que se baseia no seguinte resultado.
+
+\begin{proposition} \label{proposition:convex}
+Uma função  $g : \mathbb{R}^n  \rightarrow \mathbb{R}$ é côncava  se e
+somente  se,  para todo  $\bar{x}  \in  \mathbb{R}^n$, existe  $s  \in
+\mathbb{R}^n$ tal  que $g(\bar{x})  + s(x -  \bar{x}) \geq  g(x)$ para
+todo $x \in \mathbb{R}^n$.
+\end{proposition}
+
+Assim, estando em $\bar{x}$, é  necessário escolher a direção que deve
+ser   seguida  para   maximizar  $g(x)$.    Utilizando  a   Proposição
+\ref{proposition:convex},  sabe-se  que, se  $x$  é  tal que  $g(x)  >
+g(\bar{x})$, então  necessariamente $s(x -  \bar{x}) > 0$. Ou  seja, a
+partir de $\bar{x}$, movendo-se uma  quantidade adequada na direção de
+$s$, $g$ irá aumentar de valor. Logo, é preciso encontrar um vetor $s$
+que  satisfaça à  Proposição \ref{proposition:convex}.   Quando $g$  é
+diferenciável em $\bar{x}$, pode-se fazer  $s = \nabla g(\bar{x})$, ou
+seja, tomar o  vetor $s$ na direção do gradiente  de $g$ em $\bar{x}$.
+Porém,    se    este    não    for    o    caso,    pela    Proposição
+\ref{proposition:convex}, sabemos que uma solução ótima $x^*$ satisfaz
+$s(x^* - \bar{x}) >  0$. Assim, é possível sair de  $\bar{x}$ e dar um
+passo pequeno na direção  $s$ de modo a se aproximar  mais de um ponto
+ótimo, ainda que não haja acréscimo  no valor da função $g$. A questão
+que se coloca é como achar o  vetor $s$ cuja existência é garantida na
+Proposição \ref{proposition:convex}. Antes porém, define-se o que é um
+subgradiente e  um subdiferencial  de uma  função em  um ponto  do seu
+domínio.
+
+\begin{definition}\label{definition:subgradient}
+Se $g  : \mathbb{R}^n  \rightarrow \mathbb{R}$  é uma  função côncava,
+então $s$ é um subgradiente de $g$ em $\bar{x}$ se e somente se $s(x -
+\bar{x})  \geq g(x)  -  g(\bar{x}), \forall  x  \in \mathbb{R}^n$.   O
+subdiferencial $(\delta g(\bar{x}))$ de $g$  em $\bar{x}$ é o conjunto
+de todos os subgradientes de $g$ neste ponto.
+\end{definition}
+
+Uma consequência imediata da proposição anterior é dada a seguir.
+
+\begin{proposition}\label{proposition:optimal}
+Se $g$ é côncava e $0 \in  \delta g(x^*)$ então $g(x^*) = \max\{g(x) :
+x \in \mathbb{R}^n\}$, ou seja, $x^*$ é uma solução ótima.
+\end{proposition}
+
+Portanto, em teoria, se o objetivo é maximizar uma função côncava $g$,
+basta começar de um ponto  qualquer e iterativamente ir se deslocando,
+em pequenos passos, na direção de um subgradiente de $g$ naquele ponto
+até que $0$  pertença ao subdiferencial do ponto corrente,  ou seja, o
+ponto atual é ótimo. Os resultados  a seguir permitem aplicar a teoria
+acima à técnica de relaxação lagrangiana para \gls{pli}.
+
+\begin{proposition} \label{proposition-zu-convex}
+$z(u) = \min \{cx + u (d - Dx)\}$ é côncava.
+\end{proposition}
+
+O próximo  resultado mostra como  calcular um subgradiente de  $z(u) =
+\min \{cx + u (d - Dx) : x \in X\}$ no ponto $u$.
+
+\begin{proposition}
+Seja  $\bar{x}   \in  X$  tal   que  $z(u)  =   c  \bar{x}  +   u(d  -
+D\bar{x})$. Então,  $(d -  D\bar{x})$ é um  subgradiente de  $z(u)$ em
+$u$.
+\end{proposition}
+
+A  partir dos  resultados  e definições  anteriores,  estamos aptos  a
+apresentar um  procedimento para minimizar  uma função côncava  para a
+qual se  conhece um subgradiente  em todos  os pontos do  seu domínio.
+Para tal,  um pseudocódigo em alto  nível do método de  subgradiente é
+apresentado no Algoritmo (\ref{code:subgradient}).
+
+\begin{algorithm}[!ht]
+    \caption{\label{code:subgradient} Método de Subgradiente (Problema original de minimização)}
+    \Entrada{limiar, maxIter, atualizaPi}
+    \Saida{$z_{LB}$, $z_{UB}$}
+    $m \leftarrow \rho \leftarrow 0$\;
+    $z_{LB} \leftarrow 0$\;
+    $z_{UB} \leftarrow$ custo de uma solução viável\;
+    $\alpha^{0} \leftarrow \theta^{0} \leftarrow 0$\; $\pi^{0} \leftarrow 2$\;
+    
+    \Enquanto{$(\frac{z_{UB} - z_{LB}}{Z_{UB}}) \leq \ limiar$  ou $m \ < \ maxIter$}{
+        $x \leftarrow$ solução da $RL(\alpha^{m})$\;
+        $z^{m} \leftarrow$ custo da função objetivo de $x$ \;
+        \Se{$z^{m} > z_{LB}$}{
+            $z_{LB} \leftarrow z^{m}$\;
+        }
+        $z_f^m \leftarrow$ função objetivo original da solução $x$\;
+        \eSe{$x$ é viável e $z_f^m < z_{UB}$}{
+            $z_{UB} \leftarrow z_f^m$\;
+            $\rho \leftarrow 0$\;
+        } {
+            $\rho \leftarrow \rho + 1$\;
+        }
+        
+        \Se{$\rho \ = \ atualizaPi$}{
+            $\pi \leftarrow \pi/2$\;
+            $\rho \leftarrow 0$\;
+        }
+        
+        $\theta^{m} \leftarrow$ subgradiente($x$)\;
+        $n^{m} \leftarrow $ norma($\theta^{m}$)\;
+        $s^{m} \leftarrow \pi^{m} \frac{(z_{UB} - z^{m})}{||n^{m}||^{2}}$\;
+        
+        $\alpha^{m+1} \leftarrow \max(0, \alpha^{m} + s^{m}\theta^{m})$\;
+
+        $m \leftarrow m + 1$\;
+    }
+\end{algorithm}
+
+O algoritmo recebe  três parâmetros de entrada:  $limiar$, $maxIter$ e
+$atualizaPi$.   Os dois  primeiros  são utilizados  como condições  de
+parada. O  parâmetro $limiar$  indica o  valor máximo  de \textit{gap}
+para  que  a  solução  seja  considerada  ótima,  encerrando  assim  a
+execução.   O $maxIter$  limita o  máximo  de iterações  do método  do
+subgradiente. O  terceiro e  último parâmetro, $atualizaPi$,  serve de
+contador para atualizações  do valor de $\pi$, ou  seja, quando houver
+uma quantidade  $atualizaPi$ de iterações consecutivas  sem melhora do
+limitante dual.   As linhas (1)-(5)  representam apenas o  processo de
+inicialização de  variáveis, onde  $m$ é o  contador de  repetições do
+laço principal, $\rho$  é contador de iterações  consecutivas, sem que
+haja redução  no valor de  $z_{UB}$. As variáveis $z_{LB}$  e $z_{UB}$
+são  os limitantes  inferior  e superior,  respectivamente. O  símbolo
+$\alpha$ representa o vetor de  multiplicadores de Lagrange e $\theta$
+é  o  vetor de  subgradientes.   Primeiramente  resolve-se o  problema
+primal lagrangiano  utilizando os valores de  multiplicadores atuais e
+essa solução servirá para obtenção  do vetor de subgradiente.  Para um
+problema  de maximização,  se o  valor obtido  na resolução  do modelo
+relaxado  for  menor   que  o  valor  do   limitante  superior  atual,
+atualiza-se $z_{UB}$ e caso a solução do problema relaxado seja viável
+para o problema  original, o valor do limitante  inferior, $z_{LB}$, é
+atualizado com o valor da  função objetivo desconsiderando o custo dos
+multiplicadores.   Após  essas  avaliações  é  calculado  o  vetor  de
+subgradiente ($\theta^m$)  e a norma  deste vetor ($n^m$)  é utilizada
+para  computar o  tamanho do  passo  utilizado ($s^m$)  na direção  do
+subgradiente.   Com  isso,  atualiza-se o  valor  dos  multiplicadores
+lagrangianos  para  a próxima  iteração  do  algoritmo. A  linha  (26)
+garante que o multiplicador seja não-negativo.
+
+Neste trabalho  desenvolvemos quatro relaxações  lagrangianas baseadas
+no  modelo \gls{dmfm-pma}.   Um detalhe  importante a  considerar é  a
+resolução   das   relaxações   lagrangianas   quando   as   restrições
+\eqref{eq:mod-lim-delay}, \eqref{eq:mod-lim-jitter}  ou ambas  não são
+dualizadas, devendo ser tratadas no \gls{ppl}, ou seja, quando este se
+torna um problema de caminhos mais  curtos com restrição de um ou mais
+recursos.
+
+\begin{comment}
+\subsection{Problema de barreiras e multiplicadores lagrangianos} \label{sec:rl-barreiras}
+
+Essa  Seção descreve  como  o  método de  barreiras  associa-se  ao conjunto  de
+multiplicadores lagrangianos.  O conteúdo aqui apresentado  é fortemente baseado
+no livro texto de Vanderbei \cite{vanderbei:2015}.
+
+Sujeito algumas suposições, é possível mostrar  que para cada valor do parâmetro
+de  barreira, $\mu$,  existe  uma solução  única para  o  problema de  barreira.
+Mostraremos  também que  como  $\mu$ tende  a  zero, a  solução  do problema  de
+barreira se aproxima  da solução do problema de programação  linear original. No
+curso  desta Seção,  haverá  um  encaminhamento natural  para  a propriedade  de
+caminho central para os problemas primais-duais.
+
+Inicialmente assuma o problema de barreira do seguinte modo:
+
+\begin{align}
+     \displaystyle \max \ & c^{T}x + \mu \sum_{j}\text{log} x_j + \mu \sum_{i}\text{log} w_i & \label{eq:barreira-fo} \\
+     \displaystyle \text{s.a } & Ax + w = b & \label{eq:barreira-rest}
+\end{align}
+
+Este  é um  problema de  otimização com  restrição de  igualdade, então  pode-se
+aplicar o processo de relaxação lagrangiana, como mostrado anteriormente. Assim,
+o \gls{ppl} resultante pode ser descrito como:
+
+\begin{align}
+     \displaystyle (PPL)  & c^{T}x + \mu \sum_{j}\text{log} x_j + \mu \sum_{i}\text{log} w_i + u^T (b - Ax - w) &
+\end{align}
+
+Aplicando derivadas respectivamente  para cada variável e  setando-as para zero,
+obtém-se as seguintes condições de otimalidade de primeira ordem:
+
+\begin{align}
+  \nonumber \frac{\partial L}{\partial x_j} & = c_j + \mu \frac{1}{x_j} - \sum_{i} u_{i}a_{ij} & = 0,  & j = 1, 2, \dots, n, \\
+  \nonumber \frac{\partial L}{\partial w_i} & = \mu \frac{1}{w_i} - u_{i} & = 0,  & j = 1, 2, \dots, m, \\
+  \nonumber \frac{\partial L}{\partial y_i} & = b_i - \sum_{j} a_{ij}x_j x_i & = 0,  & j = 1, 2, \dots, m,
+\end{align}
+
+Escrevendo essas equações na forma matricial, temos:
+
+\begin{align}
+  \nonumber A^{T}u - \mu X^{-1}e = & \quad c &  \\
+  \nonumber u = & \quad \mu W^{-1}e & \\
+  \nonumber Ax + w = & \quad b &.
+\end{align}
+
+De modo que $X$  denota na qual os valores da diagonal são  os valores de $x$, o
+mesmo  se aplica  a matriz  $W$. Ainda,  $e$ denota  um vetor  no qual  todos os
+valores  são $1$.  Introduzindo ainda  um  vetor extra  definido como  $z =  \mu
+X^{-1}e$, podemos  reescrever as condições  de otimalidade de primeira  ordem da
+seguinte maneira:
+
+\begin{align}
+  \nonumber Ax + w = & \quad  b. & \\
+  \nonumber A^{T}u - z = & \quad c & \\
+  z = & \quad \mu X^{-1}e & \label{eq:z-bm} \\
+  u = & \quad \mu W^{-1}e & \label{eq:z-bm}
+\end{align}
+
+Assim,  ao   multiplicar  a  equação   \eqref{eq:z-bm}  por  $X$  e   a  equação
+\eqref{eq:-bm}  por W,  obtemos  uma forma  primal-dual  simétrica para  escrita
+dessas equações:
+
+\begin{equation}
+  \begin{aligned}
+    Ax + w = & \quad b & \\
+    A^{T}u - z  = & \quad  c & \\
+    XZe = & \quad \mu e & \\
+    UWe = & \quad \mu e.
+  \end{aligned}
+  \label{eq:pd-simetrico}
+\end{equation}
+
+Note  que  a  primeira  equação  de \eqref{eq:pd-simetrico}  é  a  restrição  de
+igualdade  que  aparece  no  problema  primal, enquanto  a  segunda  equação  de
+\eqref{eq:pd-simetrico}  é a  restrição  para o  problema dual.  Posteriormente,
+escrevendo a terceira e quarta equações componente a componente,
+
+\begin{align}
+  \nonumber & x_jz_j = \mu  & j = 1, 2, \dots, n, \\
+  \nonumber & u_iw_i = \mu  & i = 1, 2, \dots, m.
+\end{align}   
+é  possível   ver   que  eles   se   encaixam  perfeitamente   por
+complementaridade. De fato, se o valor de $\mu$ for igual a zero, então eles são
+exatamente iguais as  condições de complementariedade que  devem ser satisfeitas
+na otimalidade.  Por esta razão,  as duas  últimas equações são  conhecidas como
+condições de $\mu-$complementariedade.
+\end{comment}
+% Demostrada a relação  entre o valor ótimo dos multiplicadores  de Lagrange com o
+% problema de barreiras, pode-se utilizar, de  modo heurístico, o valor da solução
+% de barreiras como conjunto de multiplicadores lagrangianos.
+
+\section{Meta-heurísticas} \label{sec:metaheuristic}
+
+Uma meta-heurística  é uma  metodologia de  solução para  problemas de
+otimização combinatória que fornece uma estrutura e estratégias gerais
+para guiar o processo de solução de um método heurístico que se ajusta
+a um tipo  de problema particular.  Atualmente  as meta-heurísticas se
+tornaram uma das mais importantes ferramentas para os profissionais da
+área de Pesquisa Operacional \cite{hillier2013introduccao}.
+
+As  meta-heurísticas  podem  ser   classificadas  em  dois  conjuntos:
+meta-heurísticas singulares, tais como Simulated Annealing, GRASP, VNS
+e Busca Tabú, que abordam uma  única solução e sua estratégia de busca
+consiste em  explorar a vizinhança  da solução utilizada; e  o segundo
+conjunto,  chamado   de  meta-heurísticas  populacionais,   tais  como
+\gls{ag}, Colônia de Formigas e Enxame de Partículas, onde o foco está
+na manutenção de um conjunto de  soluções sobre as quais o processo de
+busca atua, combinando e modificando atributos dessas soluções visando
+explorar o espaço de busca.
+
+Por exemplo,  nos algoritmos genéticos cada  indivíduo (também chamado
+de cromossomo) da população representa uma solução para o problema que
+está sendo  abordado. Cada solução  tem sua qualidade  determinada por
+uma função de  aptidão e o procedimento de busca  segue através de uma
+quantidade  de gerações,  nas quais  os indivíduos  contribuem para  a
+formação  da  população  na   geração  seguinte,  com  prioridade  aos
+indivíduos com  melhor aptidão.  Dentre  os operadores mais  comuns do
+\gls{ag}  tradicional, destacam-se  o \textit{crossover}  por meio  do
+qual ocorre a obtenção de um  novo indivíduo a partir da combinação de
+duas,  ou mais,  soluções da  população (pais)  e a  mutação que  visa
+acrescentar  diversidade a  busca,  alterando indivíduos  de modo  que
+incorporem na  solução que eles representam  características distintas
+dos seus pais.
+
+\begin{comment}
+\subsection{Multiplicadores de Lagrange e Método de Pontos Interiores}
+
+Estou com dificuldade nessa Seção, a leitura é meio densa e não consigo entender com firmeza a associação. A referência que estou utilizando é o livro de Vanderbei \cite{vanderbei:2015}.
+\end{comment}
+
+\subsection{Algoritmo Genético de Chaves Aleatórias Viciadas (BRKGA)} \label{subsec:brkga}
+
+Os  algoritmos  genéticos  com chaves  aleatórias  (\gls{rkga})  foram
+introduzidos por Bean \cite{bean1994}, para tratar problemas clássicos
+de sequenciamento.  Um motivo comum  para a escolha de \gls{rkga} está
+no  fato de  que  para alguns  problemas,  \gls{ag}s tradicionais  têm
+dificuldade em manter a viabilidade  de soluções durante a operação de
+\textit{crossover}.  \gls{rkga}s  solucionam esta  dificuldade através
+de  uma  representação robusta  que  utiliza  chaves aleatórias  e  um
+decodificador  para  cada  tipo  de problema.   O  \gls{brkga}  é  uma
+meta-heurística que obtém uma solução viável para um problema a partir
+da  decodificação  de  um  cromossomo de  números  aleatórios  (também
+chamados de  chaves). Este  processo de  decodificação consiste  em um
+método  heurístico  que, em  termos  computacionais,  é desejável  que
+apresente um custo  relativamente baixo.  As chaves  são números reais
+gerados aleatoriamente  no intervalo  $[0, 1[$.  O  decodificador deve
+    retornar uma  solução viável  independente da sequência  de chaves
+    apresentada pelo cromossomo e  para isso, todo decodificador exige
+    uma representação cromossômica apropriada.
+
+De  maneira mais  formal, um  \gls{rkga} evolui  uma população  de $c$
+vetores de chaves aplicando cruzamentos e mutações, onde os indivíduos
+mais fortes de uma população têm mais chance de se tornarem pais e com
+isso perpetuar características de sua  solução. O algoritmo começa com
+uma população inicial de $c$ vetores de $n$ chaves aleatórias e produz
+uma  série de  populações. Na  $i-$ésima  geração, os  $c$ vetores  da
+população  são   particionados  em  um  subconjunto   de  vetores  que
+correspondem às melhores soluções (este  conjunto se chama elite) e um
+outro   subconjunto  com   o   restante  da   população  (chamado   de
+não-elite). Todos os vetores de  elite são salvos, sem mudança alguma,
+para a população da $(i +  1)-$ésima geração. Logo após, são inseridos
+$c_m$ vetores  de chaves  aleatórias na população  da $(i  + 1)-$ésima
+geração. Esses  vetores são chamados de  mutantes e tem o  mesmo papel
+dos operadores de mutação nos  \gls{ag}s tradicionais, ou seja, evitar
+que  a  população convirja  para  um  ótimo  local não  global.   Para
+completar  os   $c$  elementos  da  população,   são  gerados  vetores
+combinando pares de soluções da  população da $k-$ésima geração, ambos
+escolhidos aleatoriamente,  com uma  combinação uniforme. Sendo  $a$ e
+$b$  os vetores  escolhidos como  pais e  $d$ o  filho resultante,  no
+esquema mais  comum, $d[j]$,  o $j-$ésimo  componente do  vetor filho,
+recebe a $j-$ésima chave de um dos pais, com probabilidade $\rho_a$ de
+receber $a[j]$ e $\rho_b = 1 - \rho_a$ de receber $b[j]$.
+
+O \gls{brkga},  como apresentado por \cite{resende2010},  vai um pouco
+além  do \gls{rkga}  no que  se refere  às operações  de cruzamento  e
+seleção de pais.  Ambos os algoritmos selecionam pais aleatoriamente e
+com  reposição, sendo  assim um  pai  pode ter  mais de  um filho  por
+geração.  Ambos  os algoritmos fazem a  combinação dos pais $a$  e $b$
+com o  cruzamento para gerar o  filho $d$.  Enquanto no  \gls{rkga} os
+pais podem ser quaisquer indivíduos da população, no \gls{brkga} o pai
+$a$ é do conjunto elite e o pai $b$ é não elite.  Por fim, $\rho_a \ >
+\ \frac{1}{2}$ no \gls{brkga}, fazendo com que o filho $d$ tenha maior
+probabilidade  de  herdar  as  chaves   do  pai  elite,  diferente  do
+\gls{rkga}.  Essas diferenças entre o \gls{rkga} e o \gls{brkga} fazem
+com que os resultados do  \gls{brkga}, na prática, sejam superiores ao
+\gls{rkga}.
+
+Neste  trabalho  a  solução  gerada  pelo  decodificador  consiste  em
+computar uma  árvore geradora mínima onde  o custo de cada  aresta é o
+valor de uma  chave aleatória. Com base  nessa abordagem desenvolvemos
+quatro  decodificadores  diferentes,  variando  desde  as  funções  de
+aptidão de cada indivíduo, até uma nova proposta de viés associado com
+a  etapa  de  geração  das chaves  aleatórias.   Mais  detalhes  serão
+apresentados na Seção \ref{chapter:metodologia}.

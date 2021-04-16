@@ -1,0 +1,73 @@
+
+\chapter{Considerações Finais} \label{chp:consideracoes-finais}
+
+Os objetivos principais deste trabalho  consistiram na definição e realização de
+um estudo  computacional do \gls{pma}  conduzido a partir  de um conjunto  de 40
+instâncias baseadas em simulação de tráfego e de rede. Foram exploradas técnicas
+de  solução  exata utilizando  \gls{pli}  e  Relaxações Lagrangianas  e  métodos
+heurísticos capazes de gerar limitantes inferiores e superiores.
+
+Considerando os métodos exatos, foram adaptados pré-processamentos, apresentados
+por   Ribeiro   et   al.   \cite{tiago:2019},   para   fixação   de   variáveis.
+Desenvolveram-se dois modelos matemáticos,  \gls{dmfm-pma} e \gls{ab-pma}. Ambos
+se mostraram eficazes em resolver de maneira  ótima instâncias com até 125 nós e
+gerando  soluções viáveis  para todas  as 40  instâncias do  conjunto de  teste.
+Ainda, o  \gls{dmfm-pma} serviu de  base para  o desenvolvimento de  um conjunto
+contendo quatro Relaxações Lagrangianas (\gls{rl}). Tais relaxações apresentaram
+bons resultados com baixo consumo de  tempo, fato que permite a possibilidade de
+utilização para instâncias maiores.
+
+Em relação  aos métodos  heurísticos, foi desenvolvida  uma heurística  de busca
+local  em arborescências,  aplicada conjuntamente  ao algoritmo  de solução  das
+\gls{rl}s, objetivando  a geração  e aperfeiçoamento  de soluções  viáveis. Além
+disso, foram  desenvolvidas quatro variações da  meta-heurística \gls{brkga}, de
+modo que  três delas  variam a  função de  aptidão do  decodificador e  a última
+abordagem extrai a frequência de arcos durante a resolução da \gls{rl} e utiliza
+essa informação na geração das chaves aleatórias.
+
+Ao final,  todos os algoritmos  foram comparados através de  testes estatísticos
+não  paramétricos. Como  não existem  resultados para  o \gls{pma}  presentes na
+literatura,  destaca-se  a necessidade  da  comparação  de resultados  entre  as
+diferentes  metodologias  desenvolvidas.  De   tal  modo,  é  possível  validar,
+utilizando  múltiplas  abordagens,  a  qualidade  dos  limitantes  inferiores  e
+superiores. Ao  considerar o  conjunto de  todas as  metodologias desenvolvidas,
+destaca-se  o modelo  \gls{ab-pma}  como  a melhor  abordagem  para obtenção  de
+\gls{li}s  e  \gls{ls}s.  As  \gls{rl}s   geram  bons  limitantes  inferiores  e
+superiores, não sendo melhores que os modelos para todos os casos, mas o fato de
+existirem  versões combinatórias  eficientes,  permite a  solução de  instâncias
+maiores.  Por fim,  mesmo  testando  diversas funções  de  aptidão e  detectando
+melhoras com  a alteração do processo  de geração de chaves  aleatórias, não foi
+possível  gerar \gls{ls}s  com o  \gls{brkga}  que estivessem  acima das  demais
+abordagens desenvolvidas.
+
+Como  trabalhos futuros,  pode-se destacar  o possibilidade  de tornar  o modelo
+\gls{ab-pma} mais  forte, por  exemplo considerando  um conjunto  exponencial de
+restrições para garantir conectividade entre nós.  Por ser de aplicação geral em
+arborescências, a  heurística de busca  local desenvolvida pode ser  aplicada em
+outras  meta-heurísticas.  Ainda, pode-se  expandir  o  conjunto de  instâncias,
+tratando de simulações  cada vez maiores em quantidade de  veículos ou até mesmo
+considerando dados que se baseiam em cenários reais.
+
+As técnicas desenvolvidas neste trabalho podem ser aplicadas em outras variantes
+do \gls{pma} como \gls{mrp-qos} considerando  as mesmas métricas de \gls{qos} ou
+adicionando  mais restrições  ao conjunto,  tais  como o  número de  saltos e  a
+estimativa de  duração do enlace. Ainda  é possível gerar resultados  para novas
+variantes que  combinam o  \gls{pma} com  o \gls{mrp-qos},  ou seja,  o objetivo
+consiste em decidir quais terminais serão  atendidos e ao mesmo tempo computar o
+caminho de menor custo no atendimento desse terminal.
+
+
+
+
+% a frequência dos arcos da utilizados
+% na relaxação lagrangiana como um viés aplicado às chaves aleatórias geradas.
+% ,  de  modo  que  o  primeiro  deles
+% (denotado  por \gls{dmfm-pma})  consegue  encontrar soluções  ótimas para  quase
+% todas as  instâncias de até 100  nós no tempo máximo  de uma hora e  serviu como
+% base  para   o  desenvolvimento   de  um   conjunto  de   diferentes  relaxações
+% lagrangianas.  O segundo  modelo  (denotado por  \gls{ab-pma}),  sendo a  última
+% abordagem desenvolvida nesta dissertação,  conseguiu gerar soluções viáveis para
+% todas as 40 instâncias do conjunto, obtendo dentre elas 28 soluções ótimas. Além
+% disso,  ambos modelos  obtiveram o  melhor desempenho  na geração  de limitantes
+% inferiores  e o  modelo \gls{ab-pma}  se mostrou  a metodologia  mais eficaz  na
+% geração de limitantes superiores.
