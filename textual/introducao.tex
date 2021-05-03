@@ -252,20 +252,18 @@ garantir que  os caminhos percorridos  para realizar a  transmissão da
 raiz para cada nó terminal  obedeçam às restrições de \gls{qos}. Essas
 considerações resultam no \gls{mrp-qos}.
 
-Uma  propriedade   essencial  para  garantir  que   uma  instância  do
-\gls{mrp-qos} seja viável é que exista  pelo menos uma solução na qual
-todos os nós terminais possam ser atendidos.  Tipicamente em VANETs os
-veículos podem ocasionalmente  se desconectarem da rede  em virtude de
-suas elevadas mobilidades, ou seja, nem sempre é possível garantir que
-todos os  veículos serão atendidos  a todo instante. Sendo  assim, foi
-proposta  uma  nova  variante   do  \gls{mrp-qos},  denominada  Máximo
-Atendimento  em  \gls{mrp}  com  restrições de  \gls{qos},  do  inglês
-\gls{pma},  onde  nem  todos  os  nós  terminais  da  rede  podem  ser
-atendidos. Se o caminho gerado da  raiz até um terminal respeita todas
-as restrições de \gls{qos}, esse  terminal atendido, caso contrário, o
-terminal  não é  atendido.   O  objetivo do  \gls{pma}  é maximizar  o
-serviço, i.e., atender  o maior número de nós terminais  de acordo com
-as métricas de \gls{qos} impostas pela rede.
+Uma propriedade essencial para garantir  que uma instância do \gls{mrp-qos} seja
+viável é que exista pelo menos uma solução na qual todos os nós terminais possam
+ser  atendidos.  Tipicamente  em  VANETs os  veículos  podem  ocasionalmente  se
+desconectarem da  rede em  virtude de  suas elevadas  mobilidades, ou  seja, nem
+sempre  é  possível garantir  que  todos  os  veículos  serão atendidos  a  todo
+instante. Sendo assim, este trabalho propões uma nova variante do \gls{mrp-qos},
+denominada  Máximo Atendimento  em  \gls{mrp} com  restrições  de \gls{qos},  do
+inglês \gls{pma}, onde  nem todos os nós terminais da  rede podem ser atendidos.
+Se o  caminho gerado  da raiz até  um terminal respeita  todas as  restrições de
+\gls{qos}, esse terminal atendido, caso contrário,  o terminal não é atendido. O
+objetivo do \gls{pma} é maximizar o serviço, i.e., atender o maior número de nós
+terminais de acordo com as métricas de \gls{qos} impostas pela rede.
 
 A Figura \ref{fig:ex1} apresenta um  exemplo do processo que constitui
 a resolução  de uma  instância do  \gls{pma}. A  Figura \ref{subfig:a}

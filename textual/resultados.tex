@@ -22,7 +22,7 @@ um    conjunto    de   40    instâncias    geradas    e   disponibilizadas    e
 
 \section{Pré-processamentos} \label{sec:prep}
 
-Esta seção apresenta  os resultados relacionados as fixações de  variáveis com a
+Esta seção apresenta  os resultados relacionados às fixações de  variáveis com a
 aplicação dos  pré-processamentos apresentados  na Seção~\ref{sec:prep-modelos}.
 Para computar problemas de \gls{sp} e \gls{sprc} utilizaram-se as implementações
 fornecidas pela biblioteca  Boost C++\footnote{\url{https://www.boost.org/}}. Os
@@ -37,7 +37,8 @@ S$ e $(i, j) \in A$, respectivamente. A coluna ``Rem. SAE ($\%$)'' apresenta, em
 porcentagens,  os valores  da coluna  ``SAE''. As  colunas ``Rem.  |V|'', ``Rem.
 |A|'' e ``Rem.  |D|'' correspondem, respectivamente, aos nós,  arcos e terminais
 removidos do grafo após aplicação  dos três pré-processamentos para a instância.
-Por fim, a coluna ``Tempo'' apresenta o tempo somado dos três procedimentos.
+Por  fim,  a  coluna  ``Tempo''  apresenta   o  tempo,  em  segundos,  dos  três
+procedimentos.
 \newpage
 % Tabela
 \begin{table}[!ht]
@@ -128,7 +129,7 @@ utilizados  nas restrições  de  {\delay} e  {\jitter} (\ref{eq:mod-lim-delay} 
 \ref{eq:mod-lim-jitter}). O  modelo \gls{dmfm-pma} apresenta resultados  de duas
 variações, a primeira utilizando o valor dos parâmetros $M_d = \Lambda$ e $M_j =
 \Xi$,  onde   $\Lambda$  e   $\Xi$  são  calculados   como  descrito   na  Seção
-\ref{subsec:m-param},      e      portanto      será      referenciada      como
+\ref{subsec:m-param},      e,     portanto,      será     referenciada      como
 \gls{dmfm-pma}$_{\Lambda, \Xi}$. A  segunda variação utiliza $M_d = M_j  = 1$ e,
 consequentemente,   será  denominada   \gls{dmfm-pma}$_{1,  1}$.   A  formulação
 \gls{ab-pma} segue  o mesmo  padrão de diferenciação  pelo valor  dos parâmetros
@@ -138,7 +139,7 @@ instabilidades numéricas associados às variáveis  reais do modelo. Portanto, 
 reportados apenas os resultados da versão \gls{ab-pma}$_{1, 1}$.
 
 As              Tabelas~\ref{tab:dmfm-lambda-xi},             \ref{tab:dmfm-um},
-\ref{tab:dmfm-um-semprep}  e \ref{tab:ab-um}  contém os  resultados dos  modelos
+\ref{tab:dmfm-um-semprep}  e \ref{tab:ab-um}  contêm os  resultados dos  modelos
 \gls{dmfm-pma}$_{\Lambda,  \Xi}$,  \gls{dmfm-pma}$_{1, 1}$,  \gls{dmfm-pma}$_{1,
 1}$   sem   utilização   dos   pré-processamentos   e   \gls{ab-pma}$_{1,   1}$,
 respectivamente.  As primeiras  quatro colunas  contém  o nome  da instância,  a
@@ -149,15 +150,14 @@ hífen ($-$) significa que o resolvedor  não retornou valor ao final da execuç
 A coluna  ``gap$\%$'' apresenta o gap  relativo percentual entre o  \gls{li} e o
 \gls{ls}\footnote{$\frac{LS  - LI}{LS}  \times 100$}.  A coluna  seguinte, ``gap
 $\%$ LS'', representa  o {\em gap} percentual do \gls{ls}  computado pelo modelo
-em relação  ao número total  de terminais  em $|D|$\footnote{$100 -  \frac{|D| -
-LS}{|D|} * 100$}. A coluna ``Nós GRB''  contém a quantidade de nós explorados da
-árvore  de enumeração  (árvore de  {\em branch-and-bound})  do Gurobi.  A última
-coluna dispõe do  tempo de execução em segundos. Os  valores ``TLE'' representam
-Tempo   Limite   Excedido.  As   linhas   ressaltadas   em  cor   cinza   escura
-(\crule[gr]{3mm}{3mm})  representam a  instâncias  nas quais  o modelo  retornou
-solução    ótima,    enquanto   as    linhas    colocadas    em   cinza    claro
-(\crule[lgr]{3mm}{3mm}) são instâncias onde obteve-se  solução viável, mas o gap
-para o limitante dual não foi fechado.
+em relação ao número total de terminais em $|D|$\footnote{$\frac{LS}{|D|} \times
+100$}. A coluna ``Nós  GRB'' contém a quantidade de nós  explorados da árvore de
+enumeração (árvore de {\em branch-and-bound}) do Gurobi. A última coluna reporta
+o tempo  de execução em  segundos. Os  valores ``TLE'' representam  Tempo Limite
+Excedido.  As  linhas ressaltadas  em  cor  cinza escura  (\crule[gr]{3mm}{3mm})
+representam instâncias  nas quais o  modelo retornou solução ótima,  enquanto as
+linhas  colocadas em  cinza  claro (\crule[lgr]{3mm}{3mm})  são instâncias  onde
+obteve-se solução viável, mas o gap para o limitante dual não foi fechado.
 \newpage
 
 % Primeira tabela
@@ -243,18 +243,18 @@ washington-200-350-150 &  & 350 &  & 150 &  & 24436 &  & - &  & - &  & - &  & - 
 
 Considerando os dados constantes  na Tabela \ref{tab:dmfm-lambda-xi}, percebe-se
 que  o  modelo \gls{dmfm-pma}$_{\Lambda,  \Xi}$  resolveu  de maneira  ótima  20
-instâncias, em  maioria contendo  entre 10  e 60 nós,  com exceção  da instância
+instâncias,  a maioria  contendo entre  10 e  60 nós,  com exceção  da instância
 ``washington-100-50-27'', e 3 instâncias contendo entre  70 e 90 nós. A média de
 tempo,  para as  20 instâncias  nas  quais obteve  resultado ótimo,  foi de  242
 segundos. Para outras 8 instâncias o modelo obteve soluções viáveis, mas não foi
-possível fechar o gap de otimalidade dessas 8 instâncias, em apenas uma o número
-de nós  da árvore de  enumeração do Gurobi  foi maior que  1, ou seja,  o modelo
-tende a consumir todo  o tempo disponível na raiz da  árvore de enumeração. Para
-as 12 últimas instâncias, o modelo não foi capaz de retornar uma solução viável.
-Para  as  duas  maiores  instâncias do  conjunto,  ``washington-200-325-170''  e
-``washington-200-350-150'', o modelo não retornou nem mesmo valores de \gls{li},
-destacando a dificuldade  até mesmo para etapa de resolução  da relaxação linear
-na raiz da árvore de enumeração.
+possível fechar o gap de otimalidade, em apenas uma o número de nós da árvore de
+enumeração do Gurobi foi maior que 1, ou  seja, o modelo tende a consumir todo o
+tempo disponível na raiz da árvore de enumeração. Para as 12 últimas instâncias,
+o modelo  não foi  capaz de retornar  uma solução viável.  Para as  duas maiores
+instâncias do conjunto, ``washington-200-325-170'' e ``washington-200-350-150'',
+o modelo  não retornou nem mesmo  valores de \gls{li}, destacando  a dificuldade
+até mesmo  para etapa  de resolução  da relaxação  linear na  raiz da  árvore de
+enumeração.
 
 Nos  resultados do  \gls{dmfm-pma}$_{\Lambda, \Xi}$,  notou-se a  dificuldade na
 obtenção de soluções viáveis de acordo com o aumento de nós (consequentemente de
@@ -360,13 +360,13 @@ apresentando   um   aumento    de   9   instâncias   em    relação   ao   mod
 
 O  tempo médio  de  execução  do \gls{dmfm-pma}$_{1,  1}$,  para  o conjunto  de
 instâncias em que foi retornada solução ótima, foi de 68 segundos, sendo o maior
-tempo de execução dentre esses casos inferior à 600 segundos. Ainda considerando
+tempo de execução dentre esses casos inferior a 600 segundos. Ainda considerando
 esse conjunto, percebe-se que  para 22 soluções, das 29 ótimas,  o número de nós
 da árvore de enumeração foi inferior a 250. Mais especificamente, para 21 dessas
 instâncias o total de nós da árvore  de enumeração foi 1 ou 0. Essas informações
-indicam que o modelo \gls{dmfm-pma} mostrou-se  bastante apertado em que se refere a
-qualidade da  solução relaxada para  instâncias contendo  até 125 nós.  Ainda, o
-fato  de  serem  necessários  poucos  nós  na  árvore  de  enumeração  pode  ser
+indicam  que o  modelo \gls{dmfm-pma}  mostrou-se  bastante apertado  em que  se
+refere à  qualidade da solução  relaxada para  instâncias contendo até  125 nós.
+Ainda, o fato de  serem necessários poucos nós na árvore  de enumeração pode ser
 justificado possivelmente pela rápida melhora na qualidade dos limitantes.
 
 Considerando as duas  variações de \gls{dmfm-pma}, vale destacar  que os valores
@@ -603,6 +603,14 @@ a soma de soluções ótimas e viáveis para cada modelagem. Os resultados da ve
 desempenho  ser inferior,  em todos  os  casos, aos  resultados retornados  pela
 versão com a utilização dos pré-processamentos.
 
+Diante dos resultados  apresentados na Tabela \ref{sumario},  vale ressaltar que
+para resolução de instâncias contendo até 125  nós, na maioria dos casos, é mais
+eficiente utilizar o modelo \gls{dmfm-pma}, dado  que o mesmo tem um menor tempo
+médio e maior número de resultados  ótimos. Caso o objetivo principal seja gerar
+limitantes  primais,  independente da  instância  do  conjunto, é  preferível  a
+utilização  do modelo  \gls{ab-pma},  que  obteve suluções  viáveis  para as  40
+instâncias.
+
 % Quarta tabela
 \begin{table}[!ht]
 \centering
@@ -678,7 +686,7 @@ das variáveis $y$.
 
 As  Tabelas  \ref{tab:rl-sp}, \ref{tab:rl-sprc-lambda},  \ref{tab:rl-sprc-xi}  e
 \ref{tab:rl-sprc2}  contêm os  resultados das  relaxações {\rlu,  \rld, \rlt}  e
-{\rlq}, respectivamente. As primeiras quatro colunas contém o nome da instância,
+{\rlq}, respectivamente. As primeiras quatro colunas contêm o nome da instância,
 quantidade de  nós (|V|), número  de nós terminais  (|D|) e quantidade  de arcos
 (|A|).  As colunas  subsequentes  se  dividem em  variações  da mesma  \gls{rl},
 organizadas  de modo  que  para  cada variação  estão  dispostos  os valores  de
@@ -964,7 +972,7 @@ A Tabela  \ref{tab:rl-sprc2} contém os  resultados mais relevantes  associados 
 relaxação  {\rlq}. A  primeira  coluna,  {\rlq}$^C$ contém  os  dados da  versão
 combinatória. Foram  omitidos os resultados  da versão com  resolvedor \gls{pli}
 pelo fato de serem inferiores a  versão combinatória para todas as instâncias. A
-mesma justificativa  aplica-se a  terceira coluna,  que apresenta  os resultados
+mesma justificativa  aplica-se à  terceira coluna,  que apresenta  os resultados
 obtidos  pela versão  {\rlq}-SV$^{C}$.  Para a  versão  {\rlq}-MB, optou-se  por
 apresentar apenas os  resultados obtidos pela versão com  resolvedor. Apesar dos
 valores  serem  próximos da  versão  combinatória,  a utilização  do  resolvedor
@@ -1043,17 +1051,17 @@ pela relaxação RL-SPRC2-MB$^R$ foi melhor que os demais.
 
 Pelo fato  da diferença entre o  {\em rank} médio das  relaxações RL-SPRC2$^C$ e
 RL-SPRC2-SV$^C$  ser  bastante   próximo  ao  valor  da   diferença  crítica,  é
-interessante aplicar o teste de Wilcoxon nos resultados. Diante desse resultado,
-foi detectada DES entre  as duas abordagens e a contagem  de vitórias reafirma a
-relaxação RL-SPRC2$^C$ com os melhores ou  iguais às demais versões para 38, das
-40 instâncias do conjunto.
+interessante aplicar o teste de Wilcoxon nos resultados. Com isso, foi detectada
+DES  entre as  duas abordagens  e a  contagem de  vitórias reafirma  a relaxação
+RL-SPRC2$^C$ com limitantes melhores ou iguais às demais versões para 38, das 40
+instâncias do conjunto.
 
 Para os \gls{ls}s, a relaxação RL-SPRC2-SV$^C$ apresentou melhor desempenho para
-um maior número de instâncias do conjunto, obtendo resultados melhores ou iguais
-às demais  variações em  35, das  40 instâncias. Essa  melhora está  associada à
-demanda menor de tempo para computar os \gls{sprc}s para cada terminal do grafo,
-dado que  não existe possibilidade  de arcos  com coeficiente negativo  e quanto
-mais  rápido  os  subproblemas  são  resolvidos, mais  iterações  do  método  de
+um  maior número  de instâncias  do conjunto,  obtendo resultados  inferiores ou
+iguais às demais variações em 35, das 40 instâncias. Essa melhora está associada
+à demanda  menor de  tempo para  computar os \gls{sprc}s  para cada  terminal do
+grafo, dado  que não existe possibilidade  de arcos com coeficiente  negativo, e
+quanto mais rápido  os subproblemas são resolvidos, mais iterações  do método de
 subgradiente podem ser executadas.
 
 \subsection{Análise geral}
@@ -1081,7 +1089,7 @@ limitantes inferiores.
 mostrou-se  mais vantajoso  resolver a  versão da  relaxação desconsiderando  os
 multiplicadores de  variação de {\delay}.  Tais resultados  se devem ao  fato da
 redução de tempo  de computação do problema de \gls{sprc}  em grafos cujos arcos
-não tem custos negativos, permitindo mais iterações do método de subgradiente.
+não têm custos negativos, permitindo mais iterações do método de subgradiente.
 \end{itemize}
 
 Para  avaliar a  qualidade dos  \gls{ls}s das  relaxações {\rlu,  \rld, \rlt}  e
@@ -1142,7 +1150,8 @@ fraca, que por sua vez resulta em um \gls{ppl} cuja solução é menos interessa
 do ponto de vista heurístico. A relaxação  contendo maior número de vitórias e o
 melhor  \textit{rank} médio,  para  esse  conjunto de  instâncias,  se trata  da
 {\rlq}, na  qual o \gls{ppl}  tem a  maior complexidade computacional  dentre as
-relaxações propostas.
+relaxações propostas. Tais resultados confirmam  que, quanto mais restrições são
+mantidas no \gls{ppl}, maior a qualidade do limitantes.
 
 \section{BRKGA}
 
@@ -1346,14 +1355,14 @@ retornados por suas respectivas relaxações  lineares e os melhores \gls{li}s d
 \gls{rl}s.
 
 A Tabela  \ref{tab:lis-all-comp} contém  os \gls{li}s das  melhores metodologias
-utilizadas   nesta   dissertação.   As    primeiras   quatro   colunas   contém,
+utilizadas   nesta   dissertação.   As    primeiras   quatro   colunas   contêm,
 respectivamente, o  nome da  instância, o  número de nós  do grafo  (``|V|''), a
 quantidade de nós terminais (``|D|'') e  o número de arcos (``|A|''). As colunas
 subsequentes  dividem-se entre  as  abordagens, indicando  o  valor de  \gls{li}
 obtido  (``LI'') e  o  tempo de  execução em  segundos  (``Tempo''). As  colunas
 ``\gls{dmfm-pma}'' e  ``\gls{ab-pma}'' apresentam, respectivamente,  os melhores
 limitantes     retornados    pelo     resolvedor    \gls{pli}.     As    colunas
-``\gls{dmfm-pma}$_{lin}$''  e  ``\gls{ab-pma}$_{lin}$''  contém  as  respectivas
+``\gls{dmfm-pma}$_{lin}$''  e  ``\gls{ab-pma}$_{lin}$''  contêm  as  respectivas
 relaxações  lineares  dos  modelos.  A   última  coluna  apresenta  os  melhores
 resultados  da  relaxação {\rlq},  dado  que  esta  \gls{rl} detém  os  melhores
 \gls{li}s dentre todas as variações.
@@ -1445,7 +1454,7 @@ apresentou  melhor qualidade,  sendo  estatisticamente  equivalente à  relaxaç
 abordagens, pode-se assumir que {\rlq}  foi melhor. Dado que {\rlq} contabilizou
 vitória em 13  instâncias e {\gls{dmfm-pma}$_{lin}$} em apenas 11.  Com base nos
 resultados e análises apresentados, notou-se  o excelente desempenho dos modelos
-matemáticos, de modo que eles detém os melhores \gls{li}s para 39 instâncias.
+matemáticos, de modo que eles detêm os melhores \gls{li}s para 39 instâncias.
 
 \section{Avaliação Geral dos Limitantes Superiores} \label{sec:resultados-li}
 

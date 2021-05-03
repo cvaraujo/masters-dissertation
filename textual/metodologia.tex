@@ -426,7 +426,7 @@ $z_k  = 0$,  ou seja,  o valor  de $w_1(k)$  se mantém  inalterado. A  diferen�
 consiste na etapa de calcular $w_2(k)$,  quando $k$ não é atendido. A quantidade
 de  recurso  $r$ que  pode  ser  utilizada  é  incrementada de  $\Delta_r$  para
 $\Delta_r + 1$, tal que $r \in \{d,  j\}$. Portanto, o valor de $w_2(k)$ é igual
-à \gls{sprc}$(s,  k, \Delta_r  + 1)$,  inviabilizando a  solução do  problema de
+a \gls{sprc}$(s,  k, \Delta_r  + 1)$,  inviabilizando a  solução do  problema de
 caminho mínimo.
 
 Após computar  os valores de  $w_1(k) \text{ e  } w_2(k)$ para  um $k \in  D$, o
@@ -448,7 +448,7 @@ apresentados na Seção \ref{sec:resultados-rls}.
 
 Notam-se  algumas diferenças  ao considerar  a solução  do \gls{ppl}  utilizando
 resolvedor de \gls{pli} e a  versão com algoritmos combinatórios. Primeiramente,
-os caminhos  obtidos pelo  resolvedor são simples,  i.e., não  repetem-se arcos.
+os  caminhos obtidos  pelo resolvedor  são  simples, i.e.,  não repetem-se  nós.
 Assim, é possível obter soluções para  o \gls{ppl} independente da existência de
 ciclos negativos.  A segunda diferença consiste  no caminho de $s$  para visitar
 cada nó opcional $q  \in S$, de modo que o resolvedor  de \gls{pli} considera os
@@ -477,7 +477,7 @@ desenvolvidos.
 % procedimentos em comum de todos os decodificadores desenvolvidos.
 
 \begin{algorithm}[!ht]
-  \caption{Decodificador BRKGA $O(m \log m + \#BL + \#f)$ \label{alg:brkga}}
+  \caption{Decodificador BRKGA $O(m \log m + \#BL + \#F)$ \label{alg:brkga}}
   \Entrada{c, G}
   \tcp{c: vetor de chaves aleatórias com tamanho $|E|$} 
   \tcp{G: grafo (V, E)} 
@@ -525,7 +525,7 @@ Uma vez  determinada a arborescência  $T$ a  partir das chaves  aleatórias, ca
 agora determinar  a quantidade máxima de  terminais que podem ser  atendidos por
 essa arborescência. Primeiro  verifica-se o conjunto de terminais  que podem ser
 atendidos  considerando apenas  as  restrições de  {\delay}  e {\jitter}.  Desse
-conjunto é  selecionado o subconjunto máximo  de terminais que também  atendem a
+conjunto é  selecionado o subconjunto máximo  de terminais que também  atendem à
 restrição de variação de {\delay}. O algoritmo \ref{alg:selec-var} é responsável
 por essa seleção que, em linhas gerais, consiste na criação de um vetor ordenado
 dos  {\delay  s}  de  todos  os  terminais  atendidos  (considerando  apenas  as
@@ -576,13 +576,13 @@ Com $D'$ sendo um  vetor que contém os pares $(delay,  k)$, representando o {\e
 delay} do caminho de  $s$ até o terminal $k$ na  arborescência $T$. Ordenar $D'$
 de  maneira não-decrescente  pelo valor  de {\delay}  possibilita a  verificação
 organizada de todos  os subconjuntos maximais, sempre  utilizando dois ponteiros
-para marcar o inicio  e o fim do subconjunto. O ponteiro  $i$ visita cada índice
+para marcar o início  e o fim do subconjunto. O ponteiro  $i$ visita cada índice
 de $D'$, enquanto o segundo ponteiro,  $j$, posiciona-se sempre a frente de $i$,
 indicando o último elemento desse subconjunto, ou seja, o terminal mais distante
-de $i$ cujo {\delay} é menor ou igual à $delay(i) + \Delta_v$. Esse procedimento
-tem complexidade  computacional dominada  pela ordenação,  que pode  executar em
-$O(d'  \log  d')$, dado  que  o  procedimento  de verificação  dos  subconjuntos
-maximais é feito em tempo linear, $O(d)$.
+de $i$ cujo  {\delay} é menor ou  igual a $delay(i) + \Delta_v$.  Assumindo $d =
+|D|$, esse procedimento tem  complexidade computacional dominada pela ordenação,
+que pode executar em  $O(d \log d)$, dado que o  procedimento de verificação dos
+subconjuntos maximais é feito em tempo linear, $O(d)$.
 
 \subsection{Função de Aptidão F1} \label{subsec:brkga-f1}
 
@@ -620,15 +620,15 @@ complexidade de criação do vetor $D'$ é $O(d)$.
 \subsection{Função de Aptidão F2} \label{subsec:brkga-f2}
 
 A  função de  aptidão F2,  apresentada  no Algoritmo  \ref{alg:f2}, utiliza  uma
-penalização associada aos  valores que excede as métricas  de \gls{qos} violadas
+penalização associada aos valores que  excedem as métricas de \gls{qos} violadas
 quando um terminal não é atendido. Seja  $\lambda_k$ o {\delay} para ir de $s$ a
 $k$ na  arborescência $T$, assumindo que  $k$ não é atendido.  Como $\lambda_k >
 \Delta_d$, a  penalização associada com a  métrica de {\delay} é  calculada como
-$\frac{d' - \Delta_d}{\Delta_d}$. O mesmo cálculo  se aplica para as métricas de
-{\jitter} e variação de {\delay}. Para  priorizar o atendimento dos terminais na
-F.O., foi  utilizado um  coeficiente $|D|$  para cada  terminal não  atendido. A
-versão do \gls{brkga} que utiliza a  função de aptidão F2 será referenciada como
-{\bfdois}.
+$\frac{\lambda_k  - \Delta_d}{\Delta_d}$.  O  mesmo cálculo  se  aplica para  as
+métricas de {\jitter}  e variação de {\delay}. Para priorizar  o atendimento dos
+terminais na  F.O., foi utilizado  um coeficiente  $|D|$ para cada  terminal não
+atendido.  A versão  do \gls{brkga}  que  utiliza a  função de  aptidão F2  será
+referenciada como {\bfdois}.
 
 % Segunda função de aptidão
 \begin{algorithm}[!ht]
@@ -677,7 +677,7 @@ versão do \gls{brkga} que utiliza a  função de aptidão F2 será referenciada
 
 O laço  das linhas  \eqref{line:for-l-j-begin}-\eqref{line:for-l-j-end} consiste
 no processo de armazenar o {\delay} e  o {\jitter} do caminho para cada terminal
-$k$ na árvore  $T$. Verifica-se a violação  da restrição de alguma  métrica e em
+$k$ na árvore $T$.  Verifica-se a violação da restrição de  alguma métrica e, em
 caso afirmativo, computa-se a penalização associada ao terminal. O segundo laço,
 das linhas \eqref{line:for-var-begin}-\eqref{line:for-var-end},  calcula o valor
 de variação de  {\delay} para todos os pares de  terminais, verificando quando a
@@ -773,7 +773,7 @@ $y_{ij}$. Mais formalmente, considere:
 
 \begin{itemize}
   \item  $F(e)$  a  frequência  da  aresta  $e$  entre  as  soluções  do  primal
-lagrangiano;
+lagrangiano \gls{rlq};
   \item $F_{min}$ e  $F_{max}$ as frequências mínima e máxima  entre as soluções
 do primal lagrangiano;
   \item $NF(e)$ a frequência normalizada da  aresta $e$, calculada por: $NF(e) =
@@ -786,7 +786,7 @@ Tradicionalmente,  $K(e)$  é  um  valor  aleatório no  intervalo  $[0,  1)$  c
 distribuição  uniforme. A  nova  proposta é  fazer $K(e)  =  \frac{rand(0, 1)  +
 NF(e)}{2}$ para todas as chaves que representam o indivíduo. Assim, quanto maior
 a frequência da aresta, maior a  probabilidade que a chave aleatória se aproxime
-de  1.É  possível  observar  que  o novo  procedimento  de  geração  das  chaves
+de  1.  É possível  observar  que  o novo  procedimento  de  geração das  chaves
 aleatórias pode  ser combinado com  quaisquer funções de  aptidão F1, F2  ou F3.
 Sempre que uma  variação do \gls{brkga} utiliza esse  procedimento, a referência
 ``RL'' estará contida na sua denominação.
@@ -875,7 +875,7 @@ $T$ computada em $G$ enraizada no nó $s$. Assume-se que a representação de $T
 dada por  um vetor  de predecessores  com tamanho $|V|$,  ou seja,  cada posição
 desse vetor representa um  nó do grafo e o valor contido  nessa posição indica o
 predecessor   do    nó   em   $T$.   As    linhas   \eqref{line:vetores-int}   e
-\eqref{line:vetor-bool} definem três vetores de tamanho $|V|$. $L$ e $J$ mantém,
+\eqref{line:vetor-bool} definem três vetores de tamanho $|V|$. $L$ e $J$ mantêm,
 respectivamente, o {\delay} e o {\jitter} do  caminho de $s$ para cada nó $i \in
 V\backslash\{s\}$. O vetor $A$ armazena a  informação sobre o atendimento ou não
 dos nós terminais.

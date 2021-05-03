@@ -326,8 +326,8 @@ proposto a seguir:
  %& \sum_{(i, j) \in A^{-}(S)} y_{ij} \geq 1 & \forall S \in V\backslash \{s\} \label{eq:desigualdade-opicional}\\
  & a_j \geq a_i + \lambda_{ij} y_{ij} - M_d(1 - y_{ij}) & \forall (i, j) \in A' \label{eq:lambda-geq} \\
  & a_j \leq a_i + \lambda_{ij} y_{ij} + M_d(1 - y_{ij}) & \forall (i, j) \in A' \label{eq:lambda-leq} \\
- & t_j \geq T_i + \xi_{ij} y_{ij} - M_j(1 - y_{ij})& \forall (i, j) \in A' \label{eq:xi-geq} \\
- %& t_j \leq T_i + \xi_{ij} y_{ij} + M_j(1 - y_{ij})& \forall (i, j) \in A' \label{eq:xi-leq} \\
+ & t_j \geq t_i + \xi_{ij} y_{ij} - M_j(1 - y_{ij})& \forall (i, j) \in A' \label{eq:xi-geq} \\
+ %& t_j \leq t_i + \xi_{ij} y_{ij} + M_j(1 - y_{ij})& \forall (i, j) \in A' \label{eq:xi-leq} \\
  & a_k \leq \Delta_d + M_d z_k & \forall k \in D \label{eq:lim-delay} \\
  & t_k \leq \Delta_j + M_j z_k & \forall k \in D \label{eq:lim-jitter} \\
  & a_k - a_l \leq \Delta_v + M_v^k z_k + M_v^l z_l & \forall k, l \in D, k \neq l \label{eq:lim-var} \\
@@ -475,30 +475,28 @@ portanto $k$ continua como não atendido na arborescência gerada.
 
 \section{Relaxação Lagrangiana} \label{sec:rel-lagrangiana}
 
-A \gls{rl} é um conhecido método de decomposição usado na resolução de
-problemas de otimização combinatória. A  ideia principal da \gls{rl} é
-remover restrições  complicadas do  modelo matemático  e transferi-las
-para   a   função  objetivo   atribuindo   a   elas  pesos   (chamados
-multiplicadores de  Lagrange) que irão  penalizar uma solução  que não
-satisfaz alguma das restrições dualizadas. É possível demonstrar que o
-custo de uma  solução ótima da \gls{rl} sempre será  um limitante dual
-para o valor ótimo do problema original.  Um limitante primal pode ser
-obtido a partir da constatação da viabilidade de uma solução retornada
-pelo modelo  relaxado, bastando para  isto computar o valor  da função
-objetivo original para esta solução.  Uma etapa importante da \gls{rl}
-é  determinar  os valores  para  os  multiplicadores lagrangianos  que
-resultam  no melhor  limitante dual.   Para isso,  pode ser  adotado o
-método de subgradiente que consiste  em um processo iterativo por meio
-do  qual   os  multiplicadores  são  atualizados   iterativamente  até
-convergirem  para  seus  valores  ótimos.   Considerando  um  problema
-originalmente  de  minimização, este  método  pode  ser visto  como  a
-maximização do limite inferior obtido  pelo modelo relaxado baseado em
-escolhas adequadas de multiplicadores \cite{Beasley:1993}.
+A \gls{rl} é um conhecido método de decomposição usado na resolução de problemas
+de otimização combinatória.  A ideia principal da \gls{rl}  é remover restrições
+complicadas  do  modelo  matemático  e  transferi-las  para  a  função  objetivo
+atribuindo  a  elas  pesos  (chamados  multiplicadores  de  Lagrange)  que  irão
+penaliza-las sempre que  estas não forem satisfeitas em uma  solução. É possível
+demonstrar que o custo de uma solução ótima da \gls{rl} sempre será um limitante
+dual  para o  valor ótimo  do problema  original. Um  limitante primal  pode ser
+obtido a  partir da  constatação da  viabilidade de  uma solução  retornada pelo
+modelo relaxado, bastando para isto computar o valor da função objetivo original
+para esta solução. Uma etapa importante da \gls{rl} é determinar os valores para
+os  multiplicadores lagrangianos  que resultam  no melhor  limitante dual.  Para
+isso, pode  ser adotado  o método  de subgradiente que  consiste em  um processo
+iterativo por meio do qual os multiplicadores são atualizados iterativamente até
+convergirem para seus valores ótimos.  Considerando um problema originalmente de
+minimização, este  método pode ser visto  como a maximização do  limite inferior
+obtido pelo  modelo relaxado  baseado em  escolhas adequadas  de multiplicadores
+\cite{Beasley:1993}.
 
-\gls{rl}  é  bastante  conveniente   para  problemas  que  quando  são
-modelados matematicamente de modo que, não fosse por um subconjunto de
-restrições   complicadoras,   podem    ser   resolvidos   de   maneira
-eficiente. Por exemplo, considere o seguinte modelo de \gls{pli}:
+\gls{rl} é bastante conveniente para problemas modelados matematicamente de modo
+que, não fosse por um subconjunto de restrições chamadas de complicadoras, podem
+ser resolvidos de maneira eficiente. Por exemplo, considere o seguinte modelo de
+\gls{pli}:
 \begin{align*}
     \text{(IP) } & & & z = \min cx & & & & & & & & \\
     &\text{s.a. } & & Ax \geq b, & & & & & & & & \\
@@ -645,7 +643,7 @@ apresentado no Algoritmo (\ref{code:subgradient}).
         
         $\theta^{m} \leftarrow$ subgradiente($x$)\;
         $n^{m} \leftarrow $ norma($\theta^{m}$)\;
-        $s^{m} \leftarrow \pi^{m} \frac{(z_{UB} - z^{m})}{||n^{m}||^{2}}$\;
+        $s^{m} \leftarrow \pi^{m} \frac{(z_{UB} - z^{m})}{(n^{m})^{2}}$\;
         
         $\alpha^{m+1} \leftarrow \max(0, \alpha^{m} + s^{m}\theta^{m})$\;
 
@@ -841,28 +839,26 @@ gerados aleatoriamente  no intervalo  $[0, 1[$.  O  decodificador deve
     apresentada pelo cromossomo e  para isso, todo decodificador exige
     uma representação cromossômica apropriada.
 
-De  maneira mais  formal, um  \gls{rkga} evolui  uma população  de $c$
-vetores de chaves aplicando cruzamentos e mutações, onde os indivíduos
-mais fortes de uma população têm mais chance de se tornarem pais e com
-isso perpetuar características de sua  solução. O algoritmo começa com
-uma população inicial de $c$ vetores de $n$ chaves aleatórias e produz
-uma  série de  populações. Na  $i-$ésima  geração, os  $c$ vetores  da
-população  são   particionados  em  um  subconjunto   de  vetores  que
-correspondem às melhores soluções (este  conjunto se chama elite) e um
-outro   subconjunto  com   o   restante  da   população  (chamado   de
-não-elite). Todos os vetores de  elite são salvos, sem mudança alguma,
-para a população da $(i +  1)-$ésima geração. Logo após, são inseridos
-$c_m$ vetores  de chaves  aleatórias na população  da $(i  + 1)-$ésima
-geração. Esses  vetores são chamados de  mutantes e tem o  mesmo papel
-dos operadores de mutação nos  \gls{ag}s tradicionais, ou seja, evitar
-que  a  população convirja  para  um  ótimo  local não  global.   Para
-completar  os   $c$  elementos  da  população,   são  gerados  vetores
-combinando pares de soluções da  população da $k-$ésima geração, ambos
-escolhidos aleatoriamente,  com uma  combinação uniforme. Sendo  $a$ e
-$b$  os vetores  escolhidos como  pais e  $d$ o  filho resultante,  no
-esquema mais  comum, $d[j]$,  o $j-$ésimo  componente do  vetor filho,
-recebe a $j-$ésima chave de um dos pais, com probabilidade $\rho_a$ de
-receber $a[j]$ e $\rho_b = 1 - \rho_a$ de receber $b[j]$.
+De maneira  mais formal, um  \gls{rkga} evolui uma  população de $c$  vetores de
+chaves aplicando cruzamentos  e mutações, onde os indivíduos mais  fortes de uma
+população  têm   mais  chance  de  se   tornarem  pais  e  com   isso  perpetuar
+características de sua solução. O algoritmo  começa com uma população inicial de
+$c$  vetores de  $n$ chaves  aleatórias  e produz  uma série  de populações.  Na
+$i-$ésima  geração,  os  $c$  vetores  da  população  são  particionados  em  um
+subconjunto de vetores  que correspondem às melhores soluções  (este conjunto se
+chama elite)  e um  outro subconjunto  com o restante  da população  (chamado de
+não-elite). Todos  os vetores de  elite são salvos,  sem mudança alguma,  para a
+população da $(i + 1)-$ésima geração.  Logo após, são inseridos $c_m$ vetores de
+chaves aleatórias  na população da  $(i +  1)-$ésima geração. Esses  vetores são
+chamados de mutantes e têm o mesmo papel dos operadores de mutação nos \gls{ag}s
+tradicionais, ou seja,  evitar que a população convirja para  um ótimo local não
+global.  Para completar  os  $c$  elementos da  população,  são gerados  vetores
+combinando pares de soluções da população da $k-$ésima geração, ambos escolhidos
+aleatoriamente,  com  uma  combinação  uniforme.  Sendo $a$  e  $b$  os  vetores
+escolhidos como pais e $d$ o filho  resultante, no esquema mais comum, $d[j]$, o
+$j-$ésimo componente  do vetor filho, recebe  a $j-$ésima chave de  um dos pais,
+com probabilidade $\rho_a$ de receber $a[j]$ e  $\rho_b = 1 - \rho_a$ de receber
+$b[j]$.
 
 O \gls{brkga},  como apresentado por \cite{resende2010},  vai um pouco
 além  do \gls{rkga}  no que  se refere  às operações  de cruzamento  e
